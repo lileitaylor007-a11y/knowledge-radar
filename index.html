@@ -143,13 +143,13 @@ select{cursor:pointer}
         <td class="row-header">{{r}}</td>
         <td v-for="c in cols" :key="c">
           <div class="cell-items">
-            <div v-for="it in cell(r,c)" :key="it.id" class="cell-tag" :class="it.type" :title="it.title">
+            <div v-for="it in cell(r,c)" :key="it.id" class="cell-tag" :class="it.typ" :title="it.tit">
               <a v-if="it.url&&it.url!='#'" :href="it.url" target="_blank" class="hl" @click.stop>
-                <span class="tdot"></span><span class="ttl">{{it.title}}</span>
+                <span class="tdot"></span><span class="ttl">{{it.tit}}</span>
               </a>
               <template v-else>
                 <span class="tdot" @click="modal=it" style="cursor:pointer"></span>
-                <span class="ttl" @click="modal=it" style="cursor:pointer">{{it.title}}</span>
+                <span class="ttl" @click="modal=it" style="cursor:pointer">{{it.tit}}</span>
               </template>
             </div>
           </div>
@@ -236,7 +236,7 @@ select{cursor:pointer}
   <h2>📋 已添加的条目（共 {{ents2.length}} 条）</h2>
   <div class="entity-list">
     <div v-for="e in ents2.slice().reverse().slice(0,20)" :key="e.id" class="entry-row">
-      <span class="tdot" :class="e.type" style="margin-top:2px"></span>
+      <span class="tdot" :class="e.typ" style="margin-top:2px"></span>
       <div class="info"><div class="ttl">{{e.tit}}</div><div class="meta">{{e.entity}} · {{e.dt}} · {{lbl2(e.typ)}}</div></div>
       <button class="btn-sm btn-sm-del" @click="rmEntry(e.id)">删除</button>
     </div>
@@ -251,7 +251,7 @@ select{cursor:pointer}
   <div class="modal">
     <div class="modal-head">
       <span class="modal-badge" :class="modal.typ">{{lbl2(modal.typ)}}</span>
-      <div class="modal-title">{{modal.tit}}</div>
+      <div class="modal-title">{{modal.tit||modal.title}}</div>
       <button class="modal-close" @click="modal=null">×</button>
     </div>
     <div class="modal-body">
@@ -366,9 +366,10 @@ var items=computed(function(){
 
 var cols=computed(function(){
   if(curTab.value==='edit')return[];
-  var cat=curTab.value;
-  var src=allD.value[cat]||{};
-  return Object.keys(src).sort();
+  // Only show entities that have items in the filtered list
+  var seen={};
+  for(var i=0;i<items.value.length;i++){seen[items.value[i].entity]=true;}
+  return Object.keys(seen).sort();
 });
 
 var rows=computed(function(){
