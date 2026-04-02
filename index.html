@@ -1002,11 +1002,32 @@ createApp({
       } catch(e) {}
     }
 
-    onMounted(() => {
+    onMounted(async () => {
       loadFromLS();
       ghToken.value = localStorage.getItem('kk_gh_token') || '';
       lastSync.value = localStorage.getItem('kk_last_sync') || '';
+      // Auto-load from GitHub if token exists
+      if (ghToken.value) {
+        await autoLoadFromGithub();
+      }
     });
+
+    async function autoLoadFromGithub() {
+      if (!ghToken.value) return;
+      try {
+        const token = ghToken.value;
+        const rawUrl = `https://raw.githubusercontent.com/lileitaylor007-a11y/knowledge-radar/main/data.json?t=${Date.now()}`;
+        const res = await fetch(rawUrl);
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.entries && Array.isArray(data.entries) && data.entries.length > 0) {
+          userEntries.value = data.entries;
+          saveToLS();
+          lastSync.value = data.updated ? new Date(data.updated).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '已加载';
+          showToast(`📥 已自动加载 ${data.entries.length} 条数据（来自 GitHub）`);
+        }
+      } catch(e) {}
+    }
 
     function saveGhToken() {
       localStorage.setItem('kk_gh_token', ghToken.value);
@@ -1023,7 +1044,7 @@ createApp({
         const repo = 'knowledge-radar';
         const path = 'data.json';
         const content = JSON.stringify({ entries: userEntries.value, updated: new Date().toISOString() }, null, 2);
-        const encoded = btoa(unescape(encodeURIComponent(content)));
+        const encoded = btoa(encodeURIComponent(content).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
 
         // Try to get existing SHA
         let sha = null;
@@ -1098,7 +1119,7 @@ createApp({
       getCellItems, setTab, openModal,
       addEntity, removeEntity, addEntry, removeEntry, deleteEntry, resetForm,
       ghToken, syncStatus, syncStatusText, lastSync,
-      saveGhToken, syncToGithub, loadFromGithub,
+      saveGhToken, syncToGithub, loadFromGithub, autoLoadFromGithub,
     };
   }
 }).mount('#app');
