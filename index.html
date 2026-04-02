@@ -700,7 +700,8 @@
         <div class="modal-summary">{{ modalItem.summary || '暂无简介' }}</div>
         <div class="modal-actions">
           <a v-if="modalItem.url && modalItem.url !== '#'" :href="modalItem.url" target="_blank" class="modal-link">🔗 查看原文</a>
-          <button class="modal-del" @click="deleteEntry(modalItem.id); modalItem = null">🗑 删除此条目</button>
+          <button v-else class="modal-link" style="opacity:0.4;cursor:not-allowed" @click.prevent>🔗 暂无原文链接</button>
+          <button class="modal-del" @click="deleteEntry(modalItem.id); modalItem = null">🗑 删除</button>
         </div>
       </div>
     </div>
@@ -719,14 +720,14 @@ const LS_KEY = 'kk_entries_v1';
 const DATA = {
   companies: {
     "华为": [
-      { id: "hw1", title: "DriveONE 800V高压电驱动平台白皮书", type: "whitepaper", date: "2025-11", entity: "华为", authors: "华为数字能源", summary: "详细阐述华为800V SiC高压电驱动平台架构、核心功率器件选型及热管理方案。", url: "#", keywords: "800V, SiC, 电驱动, DriveONE" },
+      { id: "hw1", title: "DriveONE 800V高压电驱动平台白皮书", type: "whitepaper", date: "2025-11", entity: "华为", authors: "华为数字能源", summary: "详细阐述华为800V SiC高压电驱动平台架构、核心功率器件选型及热管理方案。", url: "https://www.huawei.com/cn/technology-introductions/industrial-digital/drives", keywords: "800V, SiC, 电驱动, DriveONE" },
       { id: "hw2", title: "智能电动领域专利布局分析", type: "patent", date: "2025-09", entity: "华为", authors: "华为技术有限公司", summary: "涵盖电机控制器、OBC、DCDC转换器的控制算法与硬件架构专利群。", url: "#", keywords: "电机控制, OBC, 专利族" },
       { id: "hw3", title: "SiC功率模块封装技术研究", type: "paper", date: "2025-06", entity: "华为", authors: "华为中央研究院", summary: "发表在IEEE ESTI会议上，研究SiC MOSFET双面散热封装与可靠性退化机理。", url: "#", keywords: "SiC, 封装, 可靠性" },
     ],
     "Wolfspeed": [
       { id: "wc1", title: "10kV SiC MOSFET for EV Inverter", type: "paper", date: "2026-03", entity: "Wolfspeed", authors: "M. Mudai et al.", summary: "IEEE PESC 2026论文，介绍10kV SiC MOSFET在车载逆变器的应用与开关损耗模型。", url: "#", keywords: "10kV, SiC MOSFET, 逆变器" },
       { id: "wc2", title: "200mm SiC Wafer Mass Production Patent", type: "patent", date: "2026-02", entity: "Wolfspeed", authors: "Wolfspeed Inc.", summary: "200mm碳化硅晶圆规模化量产工艺专利，覆盖外延生长与缺陷控制方法。", url: "#", keywords: "200mm, SiC, 晶圆" },
-      { id: "wc3", title: "Wolfspeed 300mm SiC Platform Whitepaper", type: "whitepaper", date: "2026-01", entity: "Wolfspeed", authors: "Wolfspeed Inc.", summary: "阐述300mm SiC晶圆工厂建设进展、衬底质量指标与成本路线图。", url: "#", keywords: "300mm, SiC, 衬底" },
+      { id: "wc3", title: "Wolfspeed 300mm SiC Platform Whitepaper", type: "whitepaper", date: "2026-01", entity: "Wolfspeed", authors: "Wolfspeed Inc.", summary: "阐述300mm SiC晶圆工厂建设进展、衬底质量指标与成本路线图。", url: "https://www.wolfspeed.com/knowledge-base/300mm-sic-platform", keywords: "300mm, SiC, 衬底" },
     ],
     "汇川技术": [
       { id: "hc1", title: "乘用车电驱动系统专利族", type: "patent", date: "2025-12", entity: "汇川技术", authors: "深圳市汇川技术股份有限公司", summary: "涵盖电机控制器硬件布局、功率模块散热结构与软件OTA升级方法。", url: "#", keywords: "电驱动, 电机控制, 专利" },
