@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>知识雷达 · 论文/专利/白皮书可视化</title>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #232736;
+      --border: #2e3348;
+      --accent: #4f9cff;
+      --accent2: #7c6cfc;
+      --text: #e8eaf0;
+      --text-dim: #8b90a7;
+      --paper: #4f9cff;
+      --patent: #f0a04b;
+      --whitepaper: #4fd6a8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .tab-bar {
+      display: flex;
+      gap: 0.25rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { background: var(--surface2); color: var(--text); }
+    .tab-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
+
+    /* ── Filters ── */
+    .controls {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .filter-label {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+    select, input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      outline: none;
+      transition: border 0.15s;
+    }
+    select:focus, input:focus { border-color: var(--accent); }
+    input[type="search"] { width: 200px; }
+    select { cursor: pointer; }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      gap: 1rem;
+      margin-left: auto;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .dot.paper { background: var(--paper); }
+    .dot.patent { background: var(--patent); }
+    .dot.whitepaper { background: var(--whitepaper); }
+
+    /* ── Matrix ── */
+    .matrix-wrap {
+      padding: 1.5rem 2rem 2rem;
+      overflow-x: auto;
+    }
+    .matrix {
+      border-collapse: separate;
+      border-spacing: 3px;
+      min-width: 100%;
+    }
+    .matrix th, .matrix td {
+      border-radius: 6px;
+      vertical-align: top;
+    }
+    .matrix th {
+      background: var(--surface);
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.5rem 0.6rem;
+      text-align: center;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+    .matrix th.row-header {
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: var(--surface);
+      text-align: left;
+      min-width: 90px;
+    }
+    .matrix th.col-header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background: var(--surface);
+    }
+    .matrix th.corner {
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 4;
+      background: var(--surface);
+    }
+
+    .matrix td {
+      background: var(--surface);
+      padding: 0.4rem;
+      min-width: 110px;
+      max-width: 180px;
+    }
+    .matrix td.row-header {
+      background: var(--surface);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text);
+      padding: 0.5rem 0.6rem;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+    }
+
+    .cell-items { display: flex; flex-direction: column; gap: 4px; }
+
+    .cell-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface2);
+      border-radius: 5px;
+      padding: 3px 7px;
+      font-size: 0.72rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.12s;
+      line-height: 1.3;
+      border: 1px solid transparent;
+      max-width: 100%;
+    }
+    .cell-tag:hover { border-color: var(--accent); background: var(--surface2); transform: translateY(-1px); }
+    .cell-tag .type-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .cell-tag.paper .type-dot { background: var(--paper); }
+    .cell-tag.patent .type-dot { background: var(--patent); }
+    .cell-tag.whitepaper .type-dot { background: var(--whitepaper); }
+
+    .cell-tag .tag-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 140px;
+    }
+
+    /* ── Empty cell ── */
+    .cell-empty {
+      color: var(--border);
+      font-size: 0.7rem;
+      padding: 0.3rem;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      backdrop-filter: blur(4px);
+    }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+    .modal-head {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .modal-type-badge {
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .modal-type-badge.paper { background: rgba(79,156,255,0.2); color: var(--paper); }
+    .modal-type-badge.patent { background: rgba(240,160,75,0.2); color: var(--patent); }
+    .modal-type-badge.whitepaper { background: rgba(79,214,168,0.2); color: var(--whitepaper); }
+
+    .modal-title {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.4;
+      flex: 1;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 0 0.25rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.9rem; }
+    .modal-meta {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.4rem 1rem;
+      font-size: 0.82rem;
+    }
+    .modal-meta .label { color: var(--text-dim); white-space: nowrap; }
+    .modal-meta .value { color: var(--text); }
+    .modal-summary {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: var(--text-dim);
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+    }
+    .modal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      align-self: flex-start;
+      transition: opacity 0.15s;
+    }
+    .modal-link:hover { opacity: 0.85; }
+
+    /* ── Empty State ── */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-dim);
+    }
+    .empty-state .icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .empty-state h3 { font-size: 1rem; margin-bottom: 0.4rem; color: var(--text); }
+    .empty-state p { font-size: 0.82rem; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- Header -->
+  <header>
+    <h1>🧠 知识雷达</h1>
+    <div class="tab-bar">
+      <button
+        v-for="cat in categories"
+        :key="cat.id"
+        class="tab-btn"
+        :class="{ active: activeCategory === cat.id }"
+        @click="setCategory(cat.id)"
+      >{{ cat.name }}</button>
+    </div>
+  </header>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="filter-group">
+      <span class="filter-label">年份</span>
+      <select v-model="filterYear" @change="filterYear = $event.target.value">
+        <option value="all">全部</option>
+        <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">类型</span>
+      <select v-model="filterType">
+        <option value="all">全部</option>
+        <option value="paper">论文</option>
+        <option value="patent">专利</option>
+        <option value="whitepaper">白皮书</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">🔍</span>
+      <input type="search" v-model="searchText" placeholder="搜索标题 / 作者 / 关键词…" />
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="dot paper"></span>论文</div>
+      <div class="legend-item"><span class="dot patent"></span>专利</div>
+      <div class="legend-item"><span class="dot whitepaper"></span>白皮书</div>
+    </div>
+  </div>
+
+  <!-- Matrix -->
+  <div class="matrix-wrap" v-if="filteredItems.length">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="corner">年月 / 主体</th>
+          <th class="col-header" v-for="col in columns" :key="col">{{ col }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="row in rows" :key="row">
+          <td class="row-header">{{ row }}</td>
+          <td v-for="col in columns" :key="col">
+            <div class="cell-items" v-if="getCellItems(row, col).length">
+              <span
+                v-for="item in getCellItems(row, col)"
+                :key="item.id"
+                class="cell-tag"
+                :class="item.type"
+                @click="openModal(item)"
+                :title="item.title"
+              >
+                <span class="type-dot"></span>
+                <span class="tag-title">{{ item.title }}</span>
+              </span>
+            </div>
+            <div v-else class="cell-empty">—</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state" v-else>
+    <div class="icon">📂</div>
+    <h3>暂无匹配记录</h3>
+    <p>尝试调整筛选条件，或添加新的论文 / 专利 / 白皮书</p>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" v-if="modalItem" @click.self="modalItem = null">
+    <div class="modal">
+      <div class="modal-head">
+        <span class="modal-type-badge" :class="modalItem.type">
+          {{ typeLabel(modalItem.type) }}
+        </span>
+        <div class="modal-title">{{ modalItem.title }}</div>
+        <button class="modal-close" @click="modalItem = null">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-meta">
+          <span class="label">作者</span>
+          <span class="value">{{ modalItem.authors || '—' }}</span>
+          <span class="label">发布时间</span>
+          <span class="value">{{ modalItem.date }}</span>
+          <span class="label">发布主体</span>
+          <span class="value">{{ modalItem.entity }}</span>
+          <span v-if="modalItem.keywords" class="label">关键词</span>
+          <span v-if="modalItem.keywords" class="value">{{ modalItem.keywords }}</span>
+        </div>
+        <div class="modal-summary">{{ modalItem.summary }}</div>
+        <a v-if="modalItem.url" :href="modalItem.url" target="_blank" class="modal-link">
+          🔗 查看原文
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createApp, ref, computed } = Vue;
+
+// ── Data ──────────────────────────────────────────────────────────────
+const DATA = {
+  // ── 公司 ────────────────────────────────────────────────────────────
+  companies: {
+    "华为": [
+      { id: "hw1", title: "DriveONE 800V高压电驱动平台白皮书", type: "whitepaper", date: "2025-11", entity: "华为", authors: "华为数字能源", summary: "详细阐述华为800V SiC高压电驱动平台架构、核心功率器件选型及热管理方案，适用于新能源乘用车。", url: "#", keywords: "800V, SiC, 电驱动, DriveONE" },
+      { id: "hw2", title: "智能电动领域专利布局分析", type: "patent", date: "2025-09", entity: "华为", authors: "华为技术有限公司", summary: "涵盖电机控制器、OBC、DCDC转换器的控制算法与硬件架构专利群，共计128项。", url: "#", keywords: "电机控制, OBC, 专利族" },
+      { id: "hw3", title: "SiC功率模块封装技术研究", type: "paper", date: "2025-06", entity: "华为", authors: "华为中央研究院", summary: "发表在IEEE ESTI会议上，研究SiC MOSFET双面散热封装与可靠性退化机理。", url: "#", keywords: "SiC, 封装, 可靠性" },
+      { id: "hw4", title: "华为MDC平台技术白皮书", type: "whitepaper", date: "2026-01", entity: "华为", authors: "华为智能汽车解决方案BU", summary: "MDC 810/610平台架构、传感器融合接口规范与自动驾驶计算单元软硬件解耦方案。", url: "#", keywords: "MDC, 自动驾驶, 域控制器" },
+      { id: "hw5", title: "电机驱动系统EMC设计专利", type: "patent", date: "2026-02", entity: "华为", authors: "华为技术有限公司", summary: "涉及电驱动系统PCB布局与滤波器协同设计方法，降低传导EMI 20dB。", url: "#", keywords: "EMC, EMI, PCB" },
+    ],
+    "Wolfspeed": [
+      { id: "wc1", title: "10kV SiC MOSFET for EV Inverter", type: "paper", date: "2026-03", entity: "Wolfspeed", authors: "M. Mudai et al.", summary: "IEEE PESC 2026接收论文，介绍10kV SiC MOSFET在车载逆变器的应用与开关损耗模型。", url: "#", keywords: "10kV, SiC MOSFET, 逆变器" },
+      { id: "wc2", title: "200mm SiC Wafer Mass Production Patent", type: "patent", date: "2026-02", entity: "Wolfspeed", authors: "Wolfspeed Inc.", summary: "200mm碳化硅晶圆规模化量产工艺专利，覆盖外延生长与缺陷控制方法。", url: "#", keywords: "200mm, SiC, 晶圆" },
+      { id: "wc3", title: "Wolfspeed 300mm SiC Platform Whitepaper", type: "whitepaper", date: "2026-01", entity: "Wolfspeed", authors: "Wolfspeed Inc.", summary: "阐述300mm SiC晶圆工厂建设进展、衬底质量指标与成本路线图，目标2027年量产。", url: "#", keywords: "300mm, SiC, 衬底" },
+    ],
+    "Infineon": [
+      { id: "if1", title: "Hybrid IGBT-SiC Module for 800V EV", type: "paper", date:  "2025-10", entity: "Infineon", authors: "Infineon Technologies", summary: "提出Hybrid IGBT-SiC混合模块方案，在中低负载区间效率提升3%，兼顾成本与性能。", url: "#", keywords: "IGBT, SiC, 800V, 混合模块" },
+      { id: "if2", title: "CoolSiC M1e沟道MOSFET可靠性报告", type: "whitepaper", date: "2025-08", entity: "Infineon", authors: "Infineon Technologies AG", summary: "CoolSiC Gen2 M1e 1200V/750A模块的栅极氧化物可靠性测试数据与寿命模型。", url: "#", keywords: "CoolSiC, 可靠性, 寿命模型" },
+    ],
+    "汇川技术": [
+      { id: "hc1", title: "乘用车电驱动系统专利族", type: "patent", date: "2025-12", entity: "汇川技术", authors: "深圳市汇川技术股份有限公司", summary: "涵盖电机控制器硬件布局、功率模块散热结构与软件OTA升级方法，共87项核心专利。", url: "#", keywords: "电驱动, 电机控制, 专利" },
+      { id: "hc2", title: "InnoDrive 250kW电驱平台白皮书", type: "whitepaper", date: "2026-01", entity: "汇川技术", authors: "汇川技术汽车事业部", summary: "250kW/400V SiC电驱平台电气参数、NVH优化方案与产线标定工艺。", url: "#", keywords: "SiC, 250kW, 电驱" },
+      { id: "hc3", title: "电机控制器软硬件架构论文", type: "paper", date: "2026-02", entity: "汇川技术", authors: "汇川技术研究院", summary: "发表于中国电源学会年会，提出基于AUTOSAR CP的电控软件分层架构。", url: "#", keywords: "AUTOSAR, 电机控制, 软件架构" },
+    ],
+    "基本半导体": [
+      { id: "bs1", title: "汽车级SiC MOSFET专利族", type: "patent", date: "2025-07", entity: "基本半导体", authors: "深圳基本半导体有限公司", summary: "自主SiC MOSFET设计与制造专利，覆盖沟槽栅结构与高温封装工艺。", url: "#", keywords: "SiC MOSFET, 沟槽栅" },
+      { id: "bs2", title: "车规级SiC功率模块白皮书", type: "whitepaper", date: "2025-10", entity: "基本半导体", authors: "基本半导体", summary: "Pcore™系列车规级SiC模块性能指标、可靠性认证（AEC-Q101）与车载应用适配方案。", url: "#", keywords: "车规级, SiC模块, AEC-Q101" },
+    ],
+  },
+
+  // ── 高校 ────────────────────────────────────────────────────────────
+  universities: {
+    "清华大学": [
+      { id: "thu1", title: "SiC MOSFET短路特性与保护策略", type: "paper", date: "2025-09", entity: "清华大学", authors: "电机系 李强团队", summary: "研究SiC MOSFET短路故障下的电流应力与快速关断保护方案，发表在IEEE Transactions on Power Electronics。", url: "#", keywords: "SiC, 短路保护, 可靠性" },
+      { id: "thu2", title: "电机驱动系统无传感器控制专利", type: "patent", date: "2026-01", entity: "清华大学", authors: "清华大学自动化系", summary: "基于高频信号注入的永磁同步电机无速度传感器控制算法，适用于低温低速场景。", url: "#", keywords: "无传感器, PMSM, 高频注入" },
+    ],
+    "上海交通大学": [
+      { id: "sjtu1", title: "800V电机控制器EMC优化研究", type: "paper", date: "2025-11", entity: "上海交通大学", authors: "电子信息与电气工程学院", summary: "针对800V平台电机控制器的传导与辐射EMI问题，提出主动滤波器与PWM调制策略协同优化。", url: "#", keywords: "EMC, 800V, PWM, EMI" },
+      { id: "sjtu2", title: "宽禁带半导体应用白皮书", type: "whitepaper", date: "2026-02", entity: "上海交通大学", authors: "上海交大功率器件实验室", summary: "系统梳理SiC/GaN在新能源汽车电驱动中的应用现状与技术挑战路线图。", url: "#", keywords: "SiC, GaN, 电驱动" },
+    ],
+    "华中科技大学": [
+      { id: "hust1", title: "SiC功率模块3D封装热仿真论文", type: "paper", date: "2025-08", entity: "华中科技大学", authors: "电气与电子工程学院", summary: "提出基于TaC（Thermal accumulation coefficient）模型的3D堆叠SiC模块瞬态热阻抗仿真方法。", url: "#", keywords: "3D封装, 热仿真, SiC" },
+      { id: "hust2", title: "双面散热功率模块专利", type: "patent", date: "2025-12", entity: "华中科技大学", authors: "华中科技大学", summary: "双面散热SiC功率模块结构设计与回流焊工艺方案，热阻降低35%。", url: "#", keywords: "双面散热, 热管理" },
+    ],
+  },
+
+  // ── 作者 ────────────────────────────────────────────────────────────
+  authors: {
+    "张建军": [
+      { id: "zj1", title: "电机控制器硬件在环测试方法", type: "paper", date: "2025-07", entity: "清华大学", authors: "张建军, 李明, 王浩", summary: "提出基于FPGA的电机控制器硬件在环（HIL）实时仿真架构，支持SiC器件精确建模。", url: "#", keywords: "HIL, FPGA, SiC建模" },
+      { id: "zj2", title: "电驱动系统功能安全专利", type: "patent", date: "2026-01", entity: "清华大学", authors: "张建军, 王浩", summary: "涉及ISO 26262 ASIL-D级电机控制系统的功能安全监控与故障处理机制。", url: "#", keywords: "ISO 26262, ASIL-D, 功能安全" },
+      { id: "zj3", title: "新能源汽车电驱动技术路线图白皮书", type: "whitepaper", date: "2026-03", entity: "中国汽车工程学会", authors: "张建军（主要作者）", summary: "受工信部委托，撰写2026-2030年中国新能源汽车电驱动技术发展路线图。", url: "#", keywords: "技术路线图, 电驱动, 政策" },
+    ],
+    "Dr. S. Bhattacharya": [
+      { id: "sb1", title: "SiC MOSFET Gate Driver Design for EV Inverters", type: "paper", date: "2025-10", entity: "University of Michigan", authors: "S. Bhattacharya, A. R. B. Khan", summary: "IEEE IAS 2025，提出的SiC MOSFET栅极驱动优化方案可将开关损耗降低18%。", url: "#", keywords: "栅极驱动, SiC, 开关损耗" },
+      { id: "sb2", title: "GaN HEMT for Wide-Input Automotive DCDC", type: "paper", date: "2026-02", entity: "University of Michigan", authors: "S. Bhattacharya et al.", summary: "研究48V/12V车载DCDC转换器中GaN器件的应用，开关频率达1MHz，功率密度提升40%。", url: "#", keywords: "GaN, DCDC, 功率密度" },
+    ],
+    "刘伟": [
+      { id: "lw1", title: "车规级IGBT模块热疲劳寿命预测", type: "paper", date: "2025-06", entity: "中科院电工所", authors: "刘伟, 陈刚", summary: "基于Paris-Erdogan定律的IGBT模块功率循环寿命预测模型，与实验数据误差<8%。", url: "#", keywords: "IGBT, 热疲劳, 寿命预测" },
+      { id: "lw2", title: "功率模块铜绑线工艺专利", type: "patent", date: "2025-11", entity: "中科院电工所", authors: "刘伟", summary: "涉及功率半导体模块铜绑线超声波焊接工艺参数优化方案，提高结合强度25%。", url: "#", keywords: "铜绑线, 超声波焊, 封装" },
+    ],
+  },
+};
+
+// ── App ───────────────────────────────────────────────────────────────
+createApp({
+  setup() {
+    const activeCategory = ref('companies');
+    const filterYear = ref('all');
+    const filterType = ref('all');
+    const searchText = ref('');
+    const modalItem = ref(null);
+
+    const categories = [
+      { id: 'companies',   name: '🏢 公司' },
+      { id: 'universities', name: '🏫 高校' },
+      { id: 'authors',     name: '👤 作者' },
+    ];
+
+    const currentData = computed(() => DATA[activeCategory.value] || {});
+
+    const columns = computed(() => Object.keys(currentData.value));
+
+    const allItems = computed(() => {
+      const list = [];
+      for (const entity in currentData.value) {
+        for (const item of currentData.value[entity]) {
+          list.push({ ...item, entity });
+        }
+      }
+      return list;
+    });
+
+    const filteredItems = computed(() => {
+      return allItems.value.filter(item => {
+        if (filterType.value !== 'all' && item.type !== filterType.value) return false;
+        if (searchText.value) {
+          const q = searchText.value.toLowerCase();
+          if (
+            !item.title.toLowerCase().includes(q) &&
+            !(item.authors || '').toLowerCase().includes(q) &&
+            !(item.keywords || '').toLowerCase().includes(q)
+          ) return false;
+        }
+        return true;
+      });
+    });
+
+    const years = computed(() => {
+      const ys = new Set();
+      for (const item of allItems.value) {
+        if (item.date) ys.add(item.date.slice(0, 4));
+      }
+      return [...ys].sort().reverse();
+    });
+
+    const rows = computed(() => {
+      const ys = new Set(filteredItems.value.map(i => i.date.slice(0, 7)));
+      return [...ys].sort().reverse();
+    });
+
+    function getCellItems(row, col) {
+      return filteredItems.value.filter(i => i.date.startsWith(row) && i.entity === col);
+    }
+
+    function setCategory(id) {
+      activeCategory.value = id;
+      filterYear.value = 'all';
+      searchText.value = '';
+    }
+
+    function openModal(item) {
+      modalItem.value = item;
+    }
+
+    function typeLabel(type) {
+      return { paper: '📄 论文', patent: '📜 专利', whitepaper: '📘 白皮书' }[type] || type;
+    }
+
+    return {
+      categories, activeCategory, filterYear, filterType, searchText,
+      modalItem, columns, rows, filteredItems, years,
+      getCellItems, setCategory, openModal, typeLabel,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
