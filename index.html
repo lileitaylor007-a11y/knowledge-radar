@@ -988,6 +988,7 @@ createApp({
     function removeEntity(cat, name) {
       // Remove all user entries for this entity
       userEntries.value = userEntries.value.filter(e => !(e.entity === name && e._cat === cat));
+      await nextTick();
       showToast(`已删除「${name}」及其所有条目`);
     }
 
@@ -1011,7 +1012,8 @@ createApp({
         keywords: form.value.keywords.trim(),
         _cat: cat
       };
-      userEntries.value.push(entry);
+      userEntries.value = [...userEntries.value, entry];
+      await nextTick();
       saveToLS();
       resetForm();
       showToast(`✅ 已添加「${entry.title}」`);
@@ -1019,6 +1021,7 @@ createApp({
 
     function removeEntry(id) {
       userEntries.value = userEntries.value.filter(e => e.id !== id);
+      await nextTick();
       saveToLS();
       showToast('已删除该条目');
     }
@@ -1039,11 +1042,10 @@ createApp({
 
     // Auto-save to localStorage whenever userEntries changes
     let saveTimer = null;
-    watch(userEntries, (val) => {
+    watch(userEntries, () => {
       if (saveTimer) clearTimeout(saveTimer);
       saveTimer = setTimeout(() => {
         saveToLS();
-        showToast('💾 已自动保存到本地', 'success');
       }, 800);
     }, { deep: true });
 
@@ -1084,10 +1086,9 @@ createApp({
         const text = b64DecodeUnicode(data.content);
         const parsed = JSON.parse(text);
         if (parsed.entries && Array.isArray(parsed.entries) && parsed.entries.length > 0) {
-          userEntries.value = parsed.entries;
+          userEntries.value = [...parsed.entries];
           saveToLS();
           lastSync.value = parsed.updated ? new Date(parsed.updated).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '已加载';
-          showToast(`📥 已自动加载 ${parsed.entries.length} 条数据`);
         }
       } catch(e) {}
     }
@@ -1161,7 +1162,7 @@ createApp({
         const text = b64DecodeUnicode(data.content);
         const parsed = JSON.parse(text);
         if (!parsed.entries || !Array.isArray(parsed.entries)) throw new Error('数据格式错误');
-        userEntries.value = parsed.entries;
+        userEntries.value = [...parsed.entries];
         saveToLS();
         lastSync.value = parsed.updated ? new Date(parsed.updated).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '已加载';
         syncStatus.value = 'done';
