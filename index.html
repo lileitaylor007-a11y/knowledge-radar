@@ -992,7 +992,17 @@ createApp({
     }
 
     function saveToLS() {
-      try { localStorage.setItem(LS_KEY, JSON.stringify(userEntries.value)); } catch(e) {}
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(userEntries.value));
+      } catch(e) { console.error('LS save error', e); }
+    }
+
+    function b64EncodeUnicode(str) {
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+    }
+
+    function b64DecodeUnicode(str) {
+      return decodeURIComponent(Array.from(atob(str), c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
     }
 
     function loadFromLS() {
@@ -1016,15 +1026,18 @@ createApp({
       if (!ghToken.value) return;
       try {
         const token = ghToken.value;
-        const rawUrl = `https://raw.githubusercontent.com/lileitaylor007-a11y/knowledge-radar/main/data.json?t=${Date.now()}`;
-        const res = await fetch(rawUrl);
+        const apiUrl = `https://api.github.com/repos/lileitaylor007-a11y/knowledge-radar/contents/data.json?t=${Date.now()}`;
+        const res = await fetch(apiUrl, { headers: { 'Authorization': `token ${token}` } });
         if (!res.ok) return;
         const data = await res.json();
-        if (data.entries && Array.isArray(data.entries) && data.entries.length > 0) {
-          userEntries.value = data.entries;
+        if (!data.content) return;
+        const text = b64DecodeUnicode(data.content);
+        const parsed = JSON.parse(text);
+        if (parsed.entries && Array.isArray(parsed.entries) && parsed.entries.length > 0) {
+          userEntries.value = parsed.entries;
           saveToLS();
-          lastSync.value = data.updated ? new Date(data.updated).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '已加载';
-          showToast(`📥 已自动加载 ${data.entries.length} 条数据（来自 GitHub）`);
+          lastSync.value = parsed.updated ? new Date(parsed.updated).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '已加载';
+          showToast(`📥 已自动加载 ${parsed.entries.length} 条数据`);
         }
       } catch(e) {}
     }
@@ -1043,8 +1056,10 @@ createApp({
         const owner = 'lileitaylor007-a11y';
         const repo = 'knowledge-radar';
         const path = 'data.json';
+        // Save to localStorage FIRST before uploading
+        saveToLS();
         const content = JSON.stringify({ entries: userEntries.value, updated: new Date().toISOString() }, null, 2);
-        const encoded = btoa(encodeURIComponent(content).replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16))));
+        const encoded = b64EncodeUnicode(content);
 
         // Try to get existing SHA
         let sha = null;
@@ -1088,20 +1103,20 @@ createApp({
       syncStatusText.value = '加载中...';
       try {
         const token = ghToken.value;
-        const rawUrl = `https://raw.githubusercontent.com/lileitaylor007-a11y/knowledge-radar/main/data.json?t=${Date.now()}`;
-        const res = await fetch(rawUrl);
+        const apiUrl = `https://api.github.com/repos/lileitaylor007-a11y/knowledge-radar/contents/data.json?t=${Date.now()}`;
+        const res = await fetch(apiUrl, { headers: { 'Authorization': `token ${token}` } });
         if (!res.ok) throw new Error('文件不存在，请先点「同步到 GitHub」');
         const data = await res.json();
-        if (data.entries && Array.isArray(data.entries)) {
-          userEntries.value = data.entries;
-          saveToLS();
-          lastSync.value = data.updated ? new Date(data.updated).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '已加载';
-          syncStatus.value = 'done';
-          syncStatusText.value = `✅ 已加载 ${data.entries.length} 条`;
-          showToast(`📥 已从 GitHub 加载 ${data.entries.length} 条数据`);
-        } else {
-          throw new Error('数据格式错误');
-        }
+        if (!data.content) throw new Error('文件内容为空');
+        const text = b64DecodeUnicode(data.content);
+        const parsed = JSON.parse(text);
+        if (!parsed.entries || !Array.isArray(parsed.entries)) throw new Error('数据格式错误');
+        userEntries.value = parsed.entries;
+        saveToLS();
+        lastSync.value = parsed.updated ? new Date(parsed.updated).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }) : '已加载';
+        syncStatus.value = 'done';
+        syncStatusText.value = `✅ 已加载 ${parsed.entries.length} 条`;
+        showToast(`📥 已从 GitHub 加载 ${parsed.entries.length} 条数据`);
       } catch(e) {
         syncStatus.value = 'error';
         syncStatusText.value = '❌ ' + e.message;
