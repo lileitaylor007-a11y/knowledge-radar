@@ -221,6 +221,22 @@
       white-space: nowrap;
       max-width: 140px;
     }
+    .cell-tag a.tag-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--surface2);
+      border-radius: 5px;
+      padding: 3px 7px;
+      font-size: 0.72rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.12s;
+      border: 1px solid transparent;
+      max-width: 100%;
+      text-decoration: none;
+    }
+    .cell-tag a.tag-link:hover { border-color: var(--accent); transform: translateY(-1px); }
 
     /* ── Empty cell ── */
     .cell-empty {
@@ -401,11 +417,16 @@
                 :key="item.id"
                 class="cell-tag"
                 :class="item.type"
-                @click="openModal(item)"
                 :title="item.title"
               >
-                <span class="type-dot"></span>
-                <span class="tag-title">{{ item.title }}</span>
+                <a v-if="item.url && item.url !== '#'" :href="item.url" target="_blank" @click.stop class="tag-link" @click.prevent="openModal(item)">
+                  <span class="type-dot"></span>
+                  <span class="tag-title">{{ item.title }}</span>
+                </a>
+                <template v-else>
+                  <span class="type-dot"></span>
+                  <span class="tag-title" style="cursor:default">{{ item.title }}</span>
+                </template>
               </span>
             </div>
             <div v-else class="cell-empty">—</div>
