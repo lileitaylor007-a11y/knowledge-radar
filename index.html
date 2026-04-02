@@ -18,6 +18,8 @@
       --paper: #4f9cff;
       --patent: #f0a04b;
       --whitepaper: #4fd6a8;
+      --danger: #ff5757;
+      --success: #4fd6a8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -67,7 +69,7 @@
     .tab-btn:hover { background: var(--surface2); color: var(--text); }
     .tab-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
 
-    /* ── Filters ── */
+    /* ── Controls ── */
     .controls {
       background: var(--surface);
       border-bottom: 1px solid var(--border);
@@ -82,12 +84,8 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .filter-label {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      white-space: nowrap;
-    }
-    select, input {
+    .filter-label { font-size: 0.75rem; color: var(--text-dim); white-space: nowrap; }
+    select, input, textarea {
       background: var(--surface2);
       border: 1px solid var(--border);
       color: var(--text);
@@ -97,9 +95,10 @@
       outline: none;
       transition: border 0.15s;
     }
-    select:focus, input:focus { border-color: var(--accent); }
+    select:focus, input:focus, textarea:focus { border-color: var(--accent); }
     input[type="search"] { width: 200px; }
     select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 60px; }
 
     /* ── Legend ── */
     .legend {
@@ -114,10 +113,7 @@
       font-size: 0.75rem;
       color: var(--text-dim);
     }
-    .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
     .dot.paper { background: var(--paper); }
     .dot.patent { background: var(--patent); }
     .dot.whitepaper { background: var(--whitepaper); }
@@ -170,7 +166,6 @@
       z-index: 4;
       background: var(--surface);
     }
-
     .matrix td {
       background: var(--surface);
       padding: 0.4rem;
@@ -205,15 +200,22 @@
       border: 1px solid transparent;
       max-width: 100%;
     }
-    .cell-tag:hover { border-color: var(--accent); background: var(--surface2); transform: translateY(-1px); }
-    .cell-tag .type-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+    .cell-tag:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+    .cell-tag .type-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
     .cell-tag.paper .type-dot { background: var(--paper); }
     .cell-tag.patent .type-dot { background: var(--patent); }
     .cell-tag.whitepaper .type-dot { background: var(--whitepaper); }
+
+    .cell-tag a.tag-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--text);
+      text-decoration: none;
+      max-width: 100%;
+    }
+    .cell-tag a.tag-link:hover { color: var(--accent); }
 
     .cell-tag .tag-title {
       overflow: hidden;
@@ -221,29 +223,8 @@
       white-space: nowrap;
       max-width: 140px;
     }
-    .cell-tag a.tag-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: var(--surface2);
-      border-radius: 5px;
-      padding: 3px 7px;
-      font-size: 0.72rem;
-      color: var(--text);
-      cursor: pointer;
-      transition: all 0.12s;
-      border: 1px solid transparent;
-      max-width: 100%;
-      text-decoration: none;
-    }
-    .cell-tag a.tag-link:hover { border-color: var(--accent); transform: translateY(-1px); }
 
-    /* ── Empty cell ── */
-    .cell-empty {
-      color: var(--border);
-      font-size: 0.7rem;
-      padding: 0.3rem;
-    }
+    .cell-empty { color: var(--border); font-size: 0.7rem; padding: 0.3rem; }
 
     /* ── Modal ── */
     .modal-overlay {
@@ -286,13 +267,7 @@
     .modal-type-badge.paper { background: rgba(79,156,255,0.2); color: var(--paper); }
     .modal-type-badge.patent { background: rgba(240,160,75,0.2); color: var(--patent); }
     .modal-type-badge.whitepaper { background: rgba(79,214,168,0.2); color: var(--whitepaper); }
-
-    .modal-title {
-      font-size: 1rem;
-      font-weight: 700;
-      line-height: 1.4;
-      flex: 1;
-    }
+    .modal-title { font-size: 1rem; font-weight: 700; line-height: 1.4; flex: 1; }
     .modal-close {
       background: transparent;
       border: none;
@@ -305,12 +280,7 @@
     }
     .modal-close:hover { color: var(--text); }
     .modal-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.9rem; }
-    .modal-meta {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.4rem 1rem;
-      font-size: 0.82rem;
-    }
+    .modal-meta { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 1rem; font-size: 0.82rem; }
     .modal-meta .label { color: var(--text-dim); white-space: nowrap; }
     .modal-meta .value { color: var(--text); }
     .modal-summary {
@@ -336,6 +306,21 @@
       transition: opacity 0.15s;
     }
     .modal-link:hover { opacity: 0.85; }
+    .modal-del {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: transparent;
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      border-radius: 8px;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .modal-del:hover { background: var(--danger); color: #fff; }
+    .modal-actions { display: flex; gap: 0.75rem; }
 
     /* ── Empty State ── */
     .empty-state {
@@ -347,7 +332,127 @@
     .empty-state h3 { font-size: 1rem; margin-bottom: 0.4rem; color: var(--text); }
     .empty-state p { font-size: 0.82rem; }
 
-    /* ── Scrollbar ── */
+    /* ── Edit Page ── */
+    .edit-page {
+      padding: 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .edit-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .edit-section h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .form-grid .full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+    .form-group label { font-size: 0.75rem; color: var(--text-dim); font-weight: 600; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      font-size: 0.82rem;
+    }
+    .form-group textarea { min-height: 70px; }
+
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 0.5rem; }
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { opacity: 0.85; }
+
+    /* Entity list */
+    .entity-list { margin-top: 1.5rem; }
+    .entity-item {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .entity-item .name { font-weight: 600; font-size: 0.88rem; }
+    .entity-item .count { font-size: 0.75rem; color: var(--text-dim); }
+    .entity-item .actions { display: flex; gap: 0.5rem; }
+    .entity-item .btn-sm {
+      border: none;
+      border-radius: 6px;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .btn-sm-del { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+    .btn-sm-del:hover { background: var(--danger); color: #fff; }
+
+    /* Recent entries */
+    .recent-entries { margin-top: 1.5rem; }
+    .recent-entries h3 { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 0.75rem; }
+    .entry-row {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .entry-row .type-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .entry-row .type-dot.paper { background: var(--paper); }
+    .entry-row .type-dot.patent { background: var(--patent); }
+    .entry-row .type-dot.whitepaper { background: var(--whitepaper); }
+    .entry-row .entry-info { flex: 1; min-width: 0; }
+    .entry-row .entry-title { font-size: 0.82rem; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .entry-row .entry-meta { font-size: 0.72rem; color: var(--text-dim); }
+    .entry-row .entry-actions { display: flex; gap: 0.4rem; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.82rem;
+      color: var(--text);
+      z-index: 2000;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      transition: all 0.3s;
+    }
+    .toast.success { border-color: var(--success); color: var(--success); }
+    .toast.error { border-color: var(--danger); color: var(--danger); }
+
+    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
@@ -355,100 +460,229 @@
 </head>
 <body>
 <div id="app">
+
   <!-- Header -->
   <header>
     <h1>🧠 知识雷达</h1>
     <div class="tab-bar">
       <button
-        v-for="cat in categories"
+        v-for="cat in viewCategories"
         :key="cat.id"
         class="tab-btn"
-        :class="{ active: activeCategory === cat.id }"
-        @click="setCategory(cat.id)"
+        :class="{ active: activeTab === cat.id }"
+        @click="setTab(cat.id)"
       >{{ cat.name }}</button>
     </div>
   </header>
 
-  <!-- Controls -->
-  <div class="controls">
-    <div class="filter-group">
-      <span class="filter-label">年份</span>
-      <select v-model="filterYear" @change="filterYear = $event.target.value">
-        <option value="all">全部</option>
-        <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">类型</span>
-      <select v-model="filterType">
-        <option value="all">全部</option>
-        <option value="paper">论文</option>
-        <option value="patent">专利</option>
-        <option value="whitepaper">白皮书</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">🔍</span>
-      <input type="search" v-model="searchText" placeholder="搜索标题 / 作者 / 关键词…" />
-    </div>
-    <div class="legend">
-      <div class="legend-item"><span class="dot paper"></span>论文</div>
-      <div class="legend-item"><span class="dot patent"></span>专利</div>
-      <div class="legend-item"><span class="dot whitepaper"></span>白皮书</div>
-    </div>
-  </div>
+  <!-- ── VIEW TABS ── -->
+  <template v-if="activeTab !== 'edit'">
 
-  <!-- Matrix -->
-  <div class="matrix-wrap" v-if="filteredItems.length">
-    <table class="matrix">
-      <thead>
-        <tr>
-          <th class="corner">年月 / 主体</th>
-          <th class="col-header" v-for="col in columns" :key="col">{{ col }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in rows" :key="row">
-          <td class="row-header">{{ row }}</td>
-          <td v-for="col in columns" :key="col">
-            <div class="cell-items" v-if="getCellItems(row, col).length">
-              <span
-                v-for="item in getCellItems(row, col)"
-                :key="item.id"
-                class="cell-tag"
-                :class="item.type"
-                :title="item.title"
-              >
-                <a v-if="item.url && item.url !== '#'" :href="item.url" target="_blank" @click.stop class="tag-link" @click.prevent="openModal(item)">
-                  <span class="type-dot"></span>
-                  <span class="tag-title">{{ item.title }}</span>
-                </a>
-                <template v-else>
-                  <span class="type-dot"></span>
-                  <span class="tag-title" style="cursor:default">{{ item.title }}</span>
-                </template>
-              </span>
-            </div>
-            <div v-else class="cell-empty">—</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <!-- Controls -->
+    <div class="controls">
+      <div class="filter-group">
+        <span class="filter-label">年份</span>
+        <select v-model="filterYear">
+          <option value="all">全部</option>
+          <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">类型</span>
+        <select v-model="filterType">
+          <option value="all">全部</option>
+          <option value="paper">论文</option>
+          <option value="patent">专利</option>
+          <option value="whitepaper">白皮书</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">🔍</span>
+        <input type="search" v-model="searchText" placeholder="搜索标题 / 作者 / 关键词…" />
+      </div>
+      <div class="legend">
+        <div class="legend-item"><span class="dot paper"></span>论文</div>
+        <div class="legend-item"><span class="dot patent"></span>专利</div>
+        <div class="legend-item"><span class="dot whitepaper"></span>白皮书</div>
+      </div>
+    </div>
 
-  <div class="empty-state" v-else>
-    <div class="icon">📂</div>
-    <h3>暂无匹配记录</h3>
-    <p>尝试调整筛选条件，或添加新的论文 / 专利 / 白皮书</p>
+    <!-- Matrix -->
+    <div class="matrix-wrap" v-if="filteredItems.length">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th class="corner">年月 / 主体</th>
+            <th class="col-header" v-for="col in columns" :key="col">{{ col }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="row in rows" :key="row">
+            <td class="row-header">{{ row }}</td>
+            <td v-for="col in columns" :key="col">
+              <div class="cell-items" v-if="getCellItems(row, col).length">
+                <div
+                  v-for="item in getCellItems(row, col)"
+                  :key="item.id"
+                  class="cell-tag"
+                  :class="item.type"
+                  :title="item.title"
+                >
+                  <a v-if="item.url && item.url !== '#'" :href="item.url" target="_blank" class="tag-link" @click.stop>
+                    <span class="type-dot"></span>
+                    <span class="tag-title">{{ item.title }}</span>
+                  </a>
+                  <template v-else>
+                    <span class="type-dot" @click="openModal(item)" style="cursor:pointer"></span>
+                    <span class="tag-title" @click="openModal(item)" style="cursor:pointer">{{ item.title }}</span>
+                  </template>
+                </div>
+              </div>
+              <div v-else class="cell-empty">—</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="empty-state" v-else>
+      <div class="icon">📂</div>
+      <h3>暂无匹配记录</h3>
+      <p>试试切换分类或调整筛选条件</p>
+    </div>
+
+  </template>
+
+  <!-- ── EDIT TAB ── -->
+  <div class="edit-page" v-if="activeTab === 'edit'">
+
+    <!-- Add Entity -->
+    <div class="edit-section">
+      <h2>➕ 添加新主体</h2>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>主体名称（公司 / 高校 / 作者名）</label>
+          <input v-model="newEntityName" placeholder="例如：比亚迪、国家电网、张明" @keyup.enter="addEntity" />
+        </div>
+        <div class="form-group full">
+          <label>类型</label>
+          <select v-model="newEntityCategory">
+            <option value="companies">🏢 公司</option>
+            <option value="universities">🏫 高校</option>
+            <option value="authors">👤 作者</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" @click="addEntity" :disabled="!newEntityName.trim()">添加到列表</button>
+      </div>
+    </div>
+
+    <!-- Existing Entities -->
+    <div class="edit-section" v-for="(entities, cat) in allEntitiesByCategory" :key="cat">
+      <h2>{{ catLabels[cat] }}</h2>
+      <div class="entity-list" v-if="Object.keys(entities).length">
+        <div class="entity-item" v-for="(items, name) in entities" :key="name">
+          <div>
+            <div class="name">{{ name }}</div>
+            <div class="count">{{ items.length }} 条记录</div>
+          </div>
+          <div class="actions">
+            <button class="btn-sm btn-sm-del" @click="removeEntity(cat, name)">删除主体</button>
+          </div>
+        </div>
+      </div>
+      <div v-else style="color:var(--text-dim);font-size:0.82rem;text-align:center;padding:1rem 0">
+        暂无 {{ catLabels[cat] }}，添加一个试试 👆
+      </div>
+    </div>
+
+    <!-- Add Entry -->
+    <div class="edit-section">
+      <h2>📝 添加新条目</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>分类</label>
+          <select v-model="form.category">
+            <option value="companies">🏢 公司</option>
+            <option value="universities">🏫 高校</option>
+            <option value="authors">👤 作者</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>发布主体</label>
+          <select v-model="form.entity">
+            <option value="">— 选择主体 —</option>
+            <option v-for="e in entityOptions" :key="e" :value="e">{{ e }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>新建主体（如果上面没找到）</label>
+          <input v-model="form.newEntityName" placeholder="直接输入新主体名称" />
+        </div>
+        <div class="form-group">
+          <label>条目类型</label>
+          <select v-model="form.type">
+            <option value="paper">📄 论文</option>
+            <option value="patent">📜 专利</option>
+            <option value="whitepaper">📘 白皮书</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>标题 *</label>
+          <input v-model="form.title" placeholder="论文 / 专利 / 白皮书的完整标题" />
+        </div>
+        <div class="form-group">
+          <label>作者</label>
+          <input v-model="form.authors" placeholder="作者姓名，多人用逗号分隔" />
+        </div>
+        <div class="form-group">
+          <label>发布时间</label>
+          <input v-model="form.date" placeholder="YYYY-MM" type="month" />
+        </div>
+        <div class="form-group full">
+          <label>内容简介</label>
+          <textarea v-model="form.summary" placeholder="简要描述内容核心要点…" rows="3"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>原文链接</label>
+          <input v-model="form.url" placeholder="https://...（论文链接、专利公开号、白皮书地址）" />
+        </div>
+        <div class="form-group full">
+          <label>关键词</label>
+          <input v-model="form.keywords" placeholder="用逗号分隔，如：SiC, 电机控制, 800V" />
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" @click="addEntry" :disabled="!form.title.trim()">✅ 添加条目</button>
+        <button class="btn btn-secondary" @click="resetForm">🔄 清空表单</button>
+      </div>
+    </div>
+
+    <!-- Recent Entries -->
+    <div class="edit-section" v-if="allEntries.length">
+      <h2>📋 已添加的条目（共 {{ allEntries.length }} 条）</h2>
+      <div class="recent-entries">
+        <div class="entry-row" v-for="entry in allEntries.slice().reverse().slice(0,20)" :key="entry.id">
+          <span class="type-dot" :class="entry.type"></span>
+          <div class="entry-info">
+            <div class="entry-title">{{ entry.title }}</div>
+            <div class="entry-meta">{{ entry.entity }} · {{ entry.date }} · {{ typeLabels[entry.type] }}</div>
+          </div>
+          <div class="entry-actions">
+            <button class="btn-sm btn-sm-del" @click="removeEntry(entry.id)">删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Modal -->
   <div class="modal-overlay" v-if="modalItem" @click.self="modalItem = null">
     <div class="modal">
       <div class="modal-head">
-        <span class="modal-type-badge" :class="modalItem.type">
-          {{ typeLabel(modalItem.type) }}
-        </span>
+        <span class="modal-type-badge" :class="modalItem.type">{{ typeLabels[modalItem.type] }}</span>
         <div class="modal-title">{{ modalItem.title }}</div>
         <button class="modal-close" @click="modalItem = null">×</button>
       </div>
@@ -460,109 +694,136 @@
           <span class="value">{{ modalItem.date }}</span>
           <span class="label">发布主体</span>
           <span class="value">{{ modalItem.entity }}</span>
-          <span v-if="modalItem.keywords" class="label">关键词</span>
-          <span v-if="modalItem.keywords" class="value">{{ modalItem.keywords }}</span>
+          <span class="label" v-if="modalItem.keywords">关键词</span>
+          <span class="value" v-if="modalItem.keywords">{{ modalItem.keywords }}</span>
         </div>
-        <div class="modal-summary">{{ modalItem.summary }}</div>
-        <a v-if="modalItem.url" :href="modalItem.url" target="_blank" class="modal-link">
-          🔗 查看原文
-        </a>
+        <div class="modal-summary">{{ modalItem.summary || '暂无简介' }}</div>
+        <div class="modal-actions">
+          <a v-if="modalItem.url && modalItem.url !== '#'" :href="modalItem.url" target="_blank" class="modal-link">🔗 查看原文</a>
+          <button class="modal-del" @click="deleteEntry(modalItem.id); modalItem = null">🗑 删除此条目</button>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- Toast -->
+  <div class="toast" :class="toast.type" v-if="toast.show">{{ toast.msg }}</div>
+
 </div>
 
 <script>
-const { createApp, ref, computed } = Vue;
+const { createApp, ref, computed, watch, onMounted } = Vue;
 
-// ── Data ──────────────────────────────────────────────────────────────
+const LS_KEY = 'kk_entries_v1';
+
 const DATA = {
-  // ── 公司 ────────────────────────────────────────────────────────────
   companies: {
     "华为": [
-      { id: "hw1", title: "DriveONE 800V高压电驱动平台白皮书", type: "whitepaper", date: "2025-11", entity: "华为", authors: "华为数字能源", summary: "详细阐述华为800V SiC高压电驱动平台架构、核心功率器件选型及热管理方案，适用于新能源乘用车。", url: "#", keywords: "800V, SiC, 电驱动, DriveONE" },
-      { id: "hw2", title: "智能电动领域专利布局分析", type: "patent", date: "2025-09", entity: "华为", authors: "华为技术有限公司", summary: "涵盖电机控制器、OBC、DCDC转换器的控制算法与硬件架构专利群，共计128项。", url: "#", keywords: "电机控制, OBC, 专利族" },
+      { id: "hw1", title: "DriveONE 800V高压电驱动平台白皮书", type: "whitepaper", date: "2025-11", entity: "华为", authors: "华为数字能源", summary: "详细阐述华为800V SiC高压电驱动平台架构、核心功率器件选型及热管理方案。", url: "#", keywords: "800V, SiC, 电驱动, DriveONE" },
+      { id: "hw2", title: "智能电动领域专利布局分析", type: "patent", date: "2025-09", entity: "华为", authors: "华为技术有限公司", summary: "涵盖电机控制器、OBC、DCDC转换器的控制算法与硬件架构专利群。", url: "#", keywords: "电机控制, OBC, 专利族" },
       { id: "hw3", title: "SiC功率模块封装技术研究", type: "paper", date: "2025-06", entity: "华为", authors: "华为中央研究院", summary: "发表在IEEE ESTI会议上，研究SiC MOSFET双面散热封装与可靠性退化机理。", url: "#", keywords: "SiC, 封装, 可靠性" },
-      { id: "hw4", title: "华为MDC平台技术白皮书", type: "whitepaper", date: "2026-01", entity: "华为", authors: "华为智能汽车解决方案BU", summary: "MDC 810/610平台架构、传感器融合接口规范与自动驾驶计算单元软硬件解耦方案。", url: "#", keywords: "MDC, 自动驾驶, 域控制器" },
-      { id: "hw5", title: "电机驱动系统EMC设计专利", type: "patent", date: "2026-02", entity: "华为", authors: "华为技术有限公司", summary: "涉及电驱动系统PCB布局与滤波器协同设计方法，降低传导EMI 20dB。", url: "#", keywords: "EMC, EMI, PCB" },
     ],
     "Wolfspeed": [
-      { id: "wc1", title: "10kV SiC MOSFET for EV Inverter", type: "paper", date: "2026-03", entity: "Wolfspeed", authors: "M. Mudai et al.", summary: "IEEE PESC 2026接收论文，介绍10kV SiC MOSFET在车载逆变器的应用与开关损耗模型。", url: "#", keywords: "10kV, SiC MOSFET, 逆变器" },
+      { id: "wc1", title: "10kV SiC MOSFET for EV Inverter", type: "paper", date: "2026-03", entity: "Wolfspeed", authors: "M. Mudai et al.", summary: "IEEE PESC 2026论文，介绍10kV SiC MOSFET在车载逆变器的应用与开关损耗模型。", url: "#", keywords: "10kV, SiC MOSFET, 逆变器" },
       { id: "wc2", title: "200mm SiC Wafer Mass Production Patent", type: "patent", date: "2026-02", entity: "Wolfspeed", authors: "Wolfspeed Inc.", summary: "200mm碳化硅晶圆规模化量产工艺专利，覆盖外延生长与缺陷控制方法。", url: "#", keywords: "200mm, SiC, 晶圆" },
-      { id: "wc3", title: "Wolfspeed 300mm SiC Platform Whitepaper", type: "whitepaper", date: "2026-01", entity: "Wolfspeed", authors: "Wolfspeed Inc.", summary: "阐述300mm SiC晶圆工厂建设进展、衬底质量指标与成本路线图，目标2027年量产。", url: "#", keywords: "300mm, SiC, 衬底" },
-    ],
-    "Infineon": [
-      { id: "if1", title: "Hybrid IGBT-SiC Module for 800V EV", type: "paper", date:  "2025-10", entity: "Infineon", authors: "Infineon Technologies", summary: "提出Hybrid IGBT-SiC混合模块方案，在中低负载区间效率提升3%，兼顾成本与性能。", url: "#", keywords: "IGBT, SiC, 800V, 混合模块" },
-      { id: "if2", title: "CoolSiC M1e沟道MOSFET可靠性报告", type: "whitepaper", date: "2025-08", entity: "Infineon", authors: "Infineon Technologies AG", summary: "CoolSiC Gen2 M1e 1200V/750A模块的栅极氧化物可靠性测试数据与寿命模型。", url: "#", keywords: "CoolSiC, 可靠性, 寿命模型" },
+      { id: "wc3", title: "Wolfspeed 300mm SiC Platform Whitepaper", type: "whitepaper", date: "2026-01", entity: "Wolfspeed", authors: "Wolfspeed Inc.", summary: "阐述300mm SiC晶圆工厂建设进展、衬底质量指标与成本路线图。", url: "#", keywords: "300mm, SiC, 衬底" },
     ],
     "汇川技术": [
-      { id: "hc1", title: "乘用车电驱动系统专利族", type: "patent", date: "2025-12", entity: "汇川技术", authors: "深圳市汇川技术股份有限公司", summary: "涵盖电机控制器硬件布局、功率模块散热结构与软件OTA升级方法，共87项核心专利。", url: "#", keywords: "电驱动, 电机控制, 专利" },
+      { id: "hc1", title: "乘用车电驱动系统专利族", type: "patent", date: "2025-12", entity: "汇川技术", authors: "深圳市汇川技术股份有限公司", summary: "涵盖电机控制器硬件布局、功率模块散热结构与软件OTA升级方法。", url: "#", keywords: "电驱动, 电机控制, 专利" },
       { id: "hc2", title: "InnoDrive 250kW电驱平台白皮书", type: "whitepaper", date: "2026-01", entity: "汇川技术", authors: "汇川技术汽车事业部", summary: "250kW/400V SiC电驱平台电气参数、NVH优化方案与产线标定工艺。", url: "#", keywords: "SiC, 250kW, 电驱" },
-      { id: "hc3", title: "电机控制器软硬件架构论文", type: "paper", date: "2026-02", entity: "汇川技术", authors: "汇川技术研究院", summary: "发表于中国电源学会年会，提出基于AUTOSAR CP的电控软件分层架构。", url: "#", keywords: "AUTOSAR, 电机控制, 软件架构" },
-    ],
-    "基本半导体": [
-      { id: "bs1", title: "汽车级SiC MOSFET专利族", type: "patent", date: "2025-07", entity: "基本半导体", authors: "深圳基本半导体有限公司", summary: "自主SiC MOSFET设计与制造专利，覆盖沟槽栅结构与高温封装工艺。", url: "#", keywords: "SiC MOSFET, 沟槽栅" },
-      { id: "bs2", title: "车规级SiC功率模块白皮书", type: "whitepaper", date: "2025-10", entity: "基本半导体", authors: "基本半导体", summary: "Pcore™系列车规级SiC模块性能指标、可靠性认证（AEC-Q101）与车载应用适配方案。", url: "#", keywords: "车规级, SiC模块, AEC-Q101" },
     ],
   },
-
-  // ── 高校 ────────────────────────────────────────────────────────────
   universities: {
     "清华大学": [
-      { id: "thu1", title: "SiC MOSFET短路特性与保护策略", type: "paper", date: "2025-09", entity: "清华大学", authors: "电机系 李强团队", summary: "研究SiC MOSFET短路故障下的电流应力与快速关断保护方案，发表在IEEE Transactions on Power Electronics。", url: "#", keywords: "SiC, 短路保护, 可靠性" },
-      { id: "thu2", title: "电机驱动系统无传感器控制专利", type: "patent", date: "2026-01", entity: "清华大学", authors: "清华大学自动化系", summary: "基于高频信号注入的永磁同步电机无速度传感器控制算法，适用于低温低速场景。", url: "#", keywords: "无传感器, PMSM, 高频注入" },
-    ],
-    "上海交通大学": [
-      { id: "sjtu1", title: "800V电机控制器EMC优化研究", type: "paper", date: "2025-11", entity: "上海交通大学", authors: "电子信息与电气工程学院", summary: "针对800V平台电机控制器的传导与辐射EMI问题，提出主动滤波器与PWM调制策略协同优化。", url: "#", keywords: "EMC, 800V, PWM, EMI" },
-      { id: "sjtu2", title: "宽禁带半导体应用白皮书", type: "whitepaper", date: "2026-02", entity: "上海交通大学", authors: "上海交大功率器件实验室", summary: "系统梳理SiC/GaN在新能源汽车电驱动中的应用现状与技术挑战路线图。", url: "#", keywords: "SiC, GaN, 电驱动" },
+      { id: "thu1", title: "SiC MOSFET短路特性与保护策略", type: "paper", date: "2025-09", entity: "清华大学", authors: "电机系 李强团队", summary: "IEEE Transactions on Power Electronics，研究SiC MOSFET短路故障下的电流应力与快速关断保护方案。", url: "#", keywords: "SiC, 短路保护, 可靠性" },
     ],
     "华中科技大学": [
-      { id: "hust1", title: "SiC功率模块3D封装热仿真论文", type: "paper", date: "2025-08", entity: "华中科技大学", authors: "电气与电子工程学院", summary: "提出基于TaC（Thermal accumulation coefficient）模型的3D堆叠SiC模块瞬态热阻抗仿真方法。", url: "#", keywords: "3D封装, 热仿真, SiC" },
-      { id: "hust2", title: "双面散热功率模块专利", type: "patent", date: "2025-12", entity: "华中科技大学", authors: "华中科技大学", summary: "双面散热SiC功率模块结构设计与回流焊工艺方案，热阻降低35%。", url: "#", keywords: "双面散热, 热管理" },
+      { id: "hust1", title: "SiC功率模块3D封装热仿真论文", type: "paper", date: "2025-08", entity: "华中科技大学", authors: "电气与电子工程学院", summary: "基于TaC模型的3D堆叠SiC模块瞬态热阻抗仿真方法。", url: "#", keywords: "3D封装, 热仿真, SiC" },
     ],
   },
-
-  // ── 作者 ────────────────────────────────────────────────────────────
   authors: {
     "张建军": [
-      { id: "zj1", title: "电机控制器硬件在环测试方法", type: "paper", date: "2025-07", entity: "清华大学", authors: "张建军, 李明, 王浩", summary: "提出基于FPGA的电机控制器硬件在环（HIL）实时仿真架构，支持SiC器件精确建模。", url: "#", keywords: "HIL, FPGA, SiC建模" },
-      { id: "zj2", title: "电驱动系统功能安全专利", type: "patent", date: "2026-01", entity: "清华大学", authors: "张建军, 王浩", summary: "涉及ISO 26262 ASIL-D级电机控制系统的功能安全监控与故障处理机制。", url: "#", keywords: "ISO 26262, ASIL-D, 功能安全" },
-      { id: "zj3", title: "新能源汽车电驱动技术路线图白皮书", type: "whitepaper", date: "2026-03", entity: "中国汽车工程学会", authors: "张建军（主要作者）", summary: "受工信部委托，撰写2026-2030年中国新能源汽车电驱动技术发展路线图。", url: "#", keywords: "技术路线图, 电驱动, 政策" },
-    ],
-    "Dr. S. Bhattacharya": [
-      { id: "sb1", title: "SiC MOSFET Gate Driver Design for EV Inverters", type: "paper", date: "2025-10", entity: "University of Michigan", authors: "S. Bhattacharya, A. R. B. Khan", summary: "IEEE IAS 2025，提出的SiC MOSFET栅极驱动优化方案可将开关损耗降低18%。", url: "#", keywords: "栅极驱动, SiC, 开关损耗" },
-      { id: "sb2", title: "GaN HEMT for Wide-Input Automotive DCDC", type: "paper", date: "2026-02", entity: "University of Michigan", authors: "S. Bhattacharya et al.", summary: "研究48V/12V车载DCDC转换器中GaN器件的应用，开关频率达1MHz，功率密度提升40%。", url: "#", keywords: "GaN, DCDC, 功率密度" },
-    ],
-    "刘伟": [
-      { id: "lw1", title: "车规级IGBT模块热疲劳寿命预测", type: "paper", date: "2025-06", entity: "中科院电工所", authors: "刘伟, 陈刚", summary: "基于Paris-Erdogan定律的IGBT模块功率循环寿命预测模型，与实验数据误差<8%。", url: "#", keywords: "IGBT, 热疲劳, 寿命预测" },
-      { id: "lw2", title: "功率模块铜绑线工艺专利", type: "patent", date: "2025-11", entity: "中科院电工所", authors: "刘伟", summary: "涉及功率半导体模块铜绑线超声波焊接工艺参数优化方案，提高结合强度25%。", url: "#", keywords: "铜绑线, 超声波焊, 封装" },
+      { id: "zj1", title: "电机控制器硬件在环测试方法", type: "paper", date: "2025-07", entity: "清华大学", authors: "张建军, 李明, 王浩", summary: "基于FPGA的电机控制器硬件在环（HIL）实时仿真架构，支持SiC器件精确建模。", url: "#", keywords: "HIL, FPGA, SiC建模" },
     ],
   },
 };
 
-// ── App ───────────────────────────────────────────────────────────────
 createApp({
   setup() {
-    const activeCategory = ref('companies');
+    const activeTab = ref('companies');
     const filterYear = ref('all');
     const filterType = ref('all');
     const searchText = ref('');
     const modalItem = ref(null);
+    const toast = ref({ show: false, type: 'success', msg: '' });
 
-    const categories = [
+    const userEntries = ref([]);
+    const newEntityName = ref('');
+    const newEntityCategory = ref('companies');
+
+    const form = ref({
+      category: 'companies', entity: '', newEntityName: '',
+      type: 'paper', title: '', authors: '', date: '',
+      summary: '', url: '', keywords: ''
+    });
+
+    const viewCategories = [
       { id: 'companies',   name: '🏢 公司' },
       { id: 'universities', name: '🏫 高校' },
       { id: 'authors',     name: '👤 作者' },
+      { id: 'edit',        name: '✏️ 编辑' },
     ];
 
-    const currentData = computed(() => DATA[activeCategory.value] || {});
+    const catLabels = {
+      companies: '🏢 公司',
+      universities: '🏫 高校',
+      authors: '👤 作者'
+    };
 
-    const columns = computed(() => Object.keys(currentData.value));
+    const typeLabels = {
+      paper: '📄 论文',
+      patent: '📜 专利',
+      whitepaper: '📘 白皮书'
+    };
+
+    // ── Data merging
+    const mergedData = computed(() => {
+      const merged = JSON.parse(JSON.stringify(DATA));
+      for (const entry of userEntries.value) {
+        const cat = entry._cat;
+        if (!merged[cat]) merged[cat] = {};
+        if (!merged[cat][entry.entity]) merged[cat][entry.entity] = [];
+        // avoid duplicates
+        if (!merged[cat][entry.entity].find(e => e.id === entry.id)) {
+          merged[cat][entry.entity].push(entry);
+        }
+      }
+      return merged;
+    });
+
+    const currentData = computed(() => mergedData.value[activeTab.value] || {});
+    const columns = computed(() => Object.keys(currentData.value).sort());
+    const allEntries = computed(() => userEntries.value);
+
+    const allEntitiesByCategory = computed(() => {
+      const r = {};
+      for (const cat of ['companies', 'universities', 'authors']) {
+        r[cat] = mergedData.value[cat] || {};
+      }
+      return r;
+    });
+
+    const entityOptions = computed(() => {
+      return Object.keys(mergedData.value[form.value.category] || {}).sort();
+    });
 
     const allItems = computed(() => {
       const list = [];
-      for (const entity in currentData.value) {
-        for (const item of currentData.value[entity]) {
+      const cat = activeTab.value;
+      if (cat === 'edit') return [];
+      const data = mergedData.value[cat] || {};
+      for (const entity in data) {
+        for (const item of data[entity]) {
           list.push({ ...item, entity });
         }
       }
@@ -585,40 +846,114 @@ createApp({
     });
 
     const years = computed(() => {
-      const ys = new Set();
-      for (const item of allItems.value) {
-        if (item.date) ys.add(item.date.slice(0, 4));
-      }
+      const ys = new Set(allItems.value.map(i => i.date ? i.date.slice(0, 4) : null).filter(Boolean));
       return [...ys].sort().reverse();
     });
 
     const rows = computed(() => {
-      const ys = new Set(filteredItems.value.map(i => i.date.slice(0, 7)));
+      const ys = new Set(filteredItems.value.map(i => i.date ? i.date.slice(0, 7) : null).filter(Boolean));
       return [...ys].sort().reverse();
     });
 
     function getCellItems(row, col) {
-      return filteredItems.value.filter(i => i.date.startsWith(row) && i.entity === col);
+      return filteredItems.value.filter(i => i.date && i.date.startsWith(row) && i.entity === col);
     }
 
-    function setCategory(id) {
-      activeCategory.value = id;
+    function setTab(id) {
+      activeTab.value = id;
       filterYear.value = 'all';
       searchText.value = '';
     }
 
-    function openModal(item) {
-      modalItem.value = item;
+    function openModal(item) { modalItem.value = item; }
+
+    function showToast(msg, type = 'success') {
+      toast.value = { show: true, type, msg };
+      setTimeout(() => toast.value.show = false, 2500);
     }
 
-    function typeLabel(type) {
-      return { paper: '📄 论文', patent: '📜 专利', whitepaper: '📘 白皮书' }[type] || type;
+    function addEntity() {
+      if (!newEntityName.value.trim()) return;
+      const name = newEntityName.value.trim();
+      const cat = newEntityCategory.value;
+      if (!mergedData.value[cat]) mergedData.value[cat] = {};
+      if (mergedData.value[cat][name]) {
+        showToast(`「${name}」已存在`, 'error');
+        return;
+      }
+      // Init with empty array so it shows in matrix
+      mergedData.value[cat][name] = [];
+      newEntityName.value = '';
+      showToast(`✅ 已添加「${name}」`);
     }
+
+    function removeEntity(cat, name) {
+      // Remove all user entries for this entity
+      userEntries.value = userEntries.value.filter(e => !(e.entity === name && e._cat === cat));
+      showToast(`已删除「${name}」及其所有条目`);
+    }
+
+    function addEntry() {
+      if (!form.value.title.trim()) return;
+      const entityName = form.value.newEntityName.trim() || form.value.entity;
+      if (!entityName) {
+        showToast('请选择或输入发布主体', 'error');
+        return;
+      }
+      const cat = form.value.category;
+      const entry = {
+        id: 'u_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        title: form.value.title.trim(),
+        type: form.value.type,
+        date: form.value.date || new Date().toISOString().slice(0, 7),
+        entity: entityName,
+        authors: form.value.authors.trim(),
+        summary: form.value.summary.trim(),
+        url: form.value.url.trim() || '#',
+        keywords: form.value.keywords.trim(),
+        _cat: cat
+      };
+      userEntries.value.push(entry);
+      saveToLS();
+      resetForm();
+      showToast(`✅ 已添加「${entry.title}」`);
+    }
+
+    function removeEntry(id) {
+      userEntries.value = userEntries.value.filter(e => e.id !== id);
+      saveToLS();
+      showToast('已删除该条目');
+    }
+
+    function deleteEntry(id) {
+      removeEntry(id);
+    }
+
+    function resetForm() {
+      form.value = { category: 'companies', entity: '', newEntityName: '', type: 'paper', title: '', authors: '', date: '', summary: '', url: '', keywords: '' };
+    }
+
+    function saveToLS() {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(userEntries.value)); } catch(e) {}
+    }
+
+    function loadFromLS() {
+      try {
+        const d = localStorage.getItem(LS_KEY);
+        if (d) userEntries.value = JSON.parse(d);
+      } catch(e) {}
+    }
+
+    onMounted(loadFromLS);
 
     return {
-      categories, activeCategory, filterYear, filterType, searchText,
-      modalItem, columns, rows, filteredItems, years,
-      getCellItems, setCategory, openModal, typeLabel,
+      activeTab, filterYear, filterType, searchText, modalItem, toast,
+      userEntries, newEntityName, newEntityCategory, form,
+      viewCategories, catLabels, typeLabels,
+      mergedData, currentData, columns, allEntries, allEntitiesByCategory,
+      entityOptions, allItems, filteredItems, years, rows,
+      getCellItems, setTab, openModal,
+      addEntity, removeEntity, addEntry, removeEntry, deleteEntry, resetForm,
     };
   }
 }).mount('#app');
