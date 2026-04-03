@@ -610,7 +610,12 @@ async function createSearchIssue(app) {
       const err = await res.json().catch(()=>{});
       throw new Error(err.message||'创建检索任务失败');
     }
-    toast(app,'✅ 检索任务已创建，知识管家处理中…稍后刷新页面查看结果','info');
+    // 同时打开 Feishu 对话框，预填检索请求，让用户一键发送
+    const feishuUID = 'ou_b3e2400ca98d75c11a342b8c601d8e3c';
+    const msgText = encodeURIComponent(`【检索请求】\n主体：${app.sEntity.value}\n分类：${app.sCat.value}\n技术主题：${app.sTopic.value}\n类型：${types}`);
+    const deepLink = `https://applink.feishu.cn/client/im/chat?openChatId=oc_fc9a459cbc578eedae83163445768bc9&text=${msgText}`;
+    window.open(deepLink, '_blank');
+    toast(app,'✅ 已打开知识管家对话框，请点发送启动检索','info');
     return true;
   } catch(e) {
     toast(app,'❌ 创建检索任务失败: '+e.message,'err');
@@ -791,7 +796,7 @@ createApp({
 
     const recentEntries = computed(() => entries.value.slice().reverse().slice(0,20));
     const collapsedCats = reactive({companies:true, universities:true, authors:true});
-    const collapsedEntities = reactive({companies:false, universities:false, authors:false});
+    const collapsedEntities = reactive({companies:true, universities:true, authors:true});
     const entriesByCat = (cat) => entries.value.filter(e => e._cat === cat).reverse();
 
     function openModal(it) { modal.value = it; }
