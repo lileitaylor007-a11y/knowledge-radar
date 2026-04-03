@@ -10,7 +10,7 @@
   --bg:#0f1117;--surface:#1a1d27;--surface2:#232736;--border:#2e3348;
   --accent:#4f9cff;--text:#e8eaf0;--text-dim:#8b90a7;
   --paper:#4f9cff;--patent:#f0a04b;--whitepaper:#4fd6a8;
-  --danger:#ff5757;--success:#4fd6a8;
+  --danger:#ff5757;--success:#4fd6a8;--warn:#f0a04b;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
@@ -84,7 +84,7 @@ select{cursor:pointer}
 .empty-state h3{font-size:1rem;margin-bottom:0.4rem;color:var(--text)}
 
 /* Edit page */
-.edit-page{padding:2rem;max-width:900px;margin:0 auto}
+.edit-page{padding:2rem;max-width:960px;margin:0 auto}
 .edit-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
 .edit-section h2{font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem 1rem;margin-bottom:1rem}
@@ -92,10 +92,11 @@ select{cursor:pointer}
 .form-group label{font-size:0.75rem;color:var(--text-dim);font-weight:600}
 .form-group input,.form-group select,.form-group textarea{width:100%;font-size:0.82rem}
 .form-group textarea{min-height:60px}
-.btn-row{display:flex;gap:0.75rem;margin-top:0.5rem;flex-wrap:wrap}
+.btn-row{display:flex;gap:0.75rem;margin-top:0.5rem;flex-wrap:wrap;flex-wrap:wrap}
 .btn{border:none;border-radius:8px;padding:0.5rem 1.2rem;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all .15s}
 .btn-pri{background:var(--accent);color:#fff}.btn-pri:hover{opacity:.85}.btn-pri:disabled{opacity:.4;cursor:not-allowed}
 .btn-sec{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.btn-sec:hover{border-color:var(--accent)}
+.btn-warn{background:rgba(240,160,75,.2);color:var(--warn);border:1px solid var(--warn)}.btn-warn:hover{background:rgba(240,160,75,.35)}
 .btn-del{background:transparent;border:1px solid var(--danger);color:var(--danger)}.btn-del:hover{background:var(--danger);color:#fff}
 .btn-sm{border:none;border-radius:6px;padding:0.25rem 0.6rem;font-size:0.72rem;cursor:pointer;transition:all .12s}
 .btn-sm-del{background:transparent;border:1px solid var(--danger);color:var(--danger)}.btn-sm-del:hover{background:var(--danger);color:#fff}
@@ -118,10 +119,20 @@ select{cursor:pointer}
 .sync-st{font-size:0.78rem;padding:0.3rem 0.6rem;border-radius:6px}
 .sync-st.idle{color:var(--text-dim)}.sync-st.run{color:var(--accent)}.sync-st.ok{color:var(--success)}.sync-st.err{color:var(--danger)}
 
+/* Search panel */
+.search-panel{background:linear-gradient(135deg,#1a1d27,#1e2540);border:1px solid var(--accent);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem}
+.search-panel h3{font-size:0.9rem;color:var(--accent);margin-bottom:0.75rem}
+.search-panel .form-grid{gap:0.6rem 1rem}
+.search-type-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.75rem}
+.search-type-row label{font-size:0.78rem;color:var(--text-dim);display:flex;align-items:center;gap:0.3rem;cursor:pointer}
+.search-type-row input[type=checkbox]{accent-color:var(--accent)}
+.search-note{font-size:0.72rem;color:var(--text-dim);margin-top:0.4rem}
+
 /* Toast */
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.6rem 1.2rem;font-size:0.82rem;color:var(--text);z-index:2000;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:all .3s;pointer-events:none}
 .toast.ok{border-color:var(--success);color:var(--success)}
 .toast.err{border-color:var(--danger);color:var(--danger)}
+.toast.info{border-color:var(--accent);color:var(--accent)}
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:6px;height:6px}
@@ -146,7 +157,7 @@ select{cursor:pointer}
   </div>
 </header>
 
-<!-- ===== MATRIX VIEW (companies / universities / authors) ===== -->
+<!-- ===== MATRIX VIEW ===== -->
 <div v-if="curTab!=='edit'">
   <div class="controls">
     <div class="filter-group">
@@ -176,7 +187,6 @@ select{cursor:pointer}
     </div>
   </div>
 
-  <!-- Matrix -->
   <div class="matrix-wrap" v-if="rows.length">
     <table class="matrix">
       <thead>
@@ -209,7 +219,6 @@ select{cursor:pointer}
     </table>
   </div>
 
-  <!-- Empty state -->
   <div class="empty-state" v-else>
     <div class="icon">📭</div>
     <h3>暂无数据</h3>
@@ -232,16 +241,57 @@ select{cursor:pointer}
     </div>
     <div class="btn-row">
       <button class="btn btn-sec" @click="saveTok">💾 保存Token</button>
-      <button class="btn btn-pri" @click="syncUp" :disabled="sSt==='run'">{{ sSt==='run'?'⏳同步中':'☁️ 同步到GitHub' }}</button>
-      <button class="btn btn-sec" @click="syncDown">📥 从GitHub加载</button>
+      <button class="btn btn-pri" @click="syncUp" :disabled="sSt==='run' || !tok">{{ sSt==='run'?'⏳同步中':'☁️ 同步到GitHub' }}</button>
+      <button class="btn btn-sec" @click="syncDown" :disabled="!tok">📥 从GitHub加载</button>
     </div>
     <p v-if="sTxt" style="margin-top:0.5rem;font-size:0.78rem" :class="'sync-st '+sSt">{{ sTxt }}</p>
     <p v-if="lSync" style="font-size:0.72rem;color:var(--text-dim);margin-top:0.4rem">上次同步：{{ lSync }}</p>
   </div>
 
+  <!-- Search -->
+  <div class="edit-section">
+    <h2>🔍 智能检索</h2>
+    <p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.75rem">输入技术主题，检索该主体在指定方向的论文/专利/白皮书。</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>主体（当前选中分类下的主体）</label>
+        <select v-model="sEntity">
+          <option value="">— 选择主体 —</option>
+          <option v-for="e in allEntityOptions" :key="e" :value="e">{{ e }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>分类</label>
+        <select v-model="sCat">
+          <option value="companies">🏢 公司</option>
+          <option value="universities">🏫 高校</option>
+          <option value="authors">👤 作者</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>技术主题 *</label>
+        <input type="text" v-model="sTopic" placeholder="如：SiC MOSFET、800V电驱动、电机控制器" />
+      </div>
+    </div>
+    <div class="search-type-row">
+      <label><input type="checkbox" value="paper" v-model="sTypes" /> 📄 论文</label>
+      <label><input type="checkbox" value="patent" v-model="sTypes" /> 📜 专利</label>
+      <label><input type="checkbox" value="whitepaper" v-model="sTypes" /> 📘 白皮书</label>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-pri" @click="doSearch" :disabled="!sTopic.trim() || !sEntity || !sTypes.length || sSearching">
+        {{ sSearching ? '⏳ 检索中（知识管家处理中）…' : '🔍 发起检索' }}
+      </button>
+    </div>
+    <p class="search-note">💡 检索请求会发送给知识管家，处理完成后自动更新到矩阵并关闭此任务。</p>
+    <div v-if="sLastSearch" style="margin-top:0.75rem;font-size:0.78rem;color:var(--text-dim)">
+      最近检索：{{ sLastSearch }}
+    </div>
+  </div>
+
   <!-- Manage entities -->
   <div class="edit-section">
-    <h2>🏢 添加公司 / 高校 / 作者</h2>
+    <h2>🏢 添加 / 删除 公司 / 高校 / 作者</h2>
     <div class="form-grid">
       <div class="form-group">
         <label>主体名称</label>
@@ -257,7 +307,7 @@ select{cursor:pointer}
       </div>
     </div>
     <div class="btn-row">
-      <button class="btn btn-pri" @click="addEntity">✅ 添加主体</button>
+      <button class="btn btn-pri" @click="addEntity" :disabled="!nEnt.trim()">✅ 添加主体</button>
     </div>
 
     <div v-for="(names,cat) in grps" :key="cat" style="margin-top:1rem">
@@ -279,7 +329,7 @@ select{cursor:pointer}
 
   <!-- Add entry -->
   <div class="edit-section">
-    <h2>📝 添加论文 / 专利 / 白皮书</h2>
+    <h2>📝 手动添加论文 / 专利 / 白皮书</h2>
     <div class="form-grid">
       <div class="form-group">
         <label>分类</label>
@@ -390,7 +440,9 @@ select{cursor:pointer}
 <script>
 const { createApp, ref, computed, watch, onMounted } = Vue;
 
-// ===== SEED DATA =====
+const OWN = 'lileitaylor007-a11y';
+const REP = 'knowledge-radar';
+
 const SEED = {
   companies: {
     "华为": [
@@ -420,16 +472,15 @@ const SEED = {
 const TABS = [
   { id:'companies',   name:'🏢 公司' },
   { id:'universities',name:'🏫 高校' },
-  { id:'authors',      name:'👤 作者' },
-  { id:'edit',         name:'✏️ 编辑' },
+  { id:'authors',     name:'👤 作者' },
+  { id:'edit',        name:'✏️ 编辑' },
 ];
 
-// ===== HELPERS =====
 function toast(app, msg, tp) {
   app.toastMsg.value = msg;
   app.toastTp.value  = tp || 'ok';
   app.toastSh.value  = true;
-  setTimeout(() => { app.toastSh.value = false; }, 2500);
+  setTimeout(() => { app.toastSh.value = false; }, 3000);
 }
 
 function b64en(s) {
@@ -438,9 +489,6 @@ function b64en(s) {
 function b64de(s) {
   return decodeURIComponent(Array.from(atob(s), c => '%' + ('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
 }
-
-const OWN = 'lileitaylor007-a11y';
-const REP = 'knowledge-radar';
 
 async function syncUp(app) {
   if (!app.tok.value) { toast(app,'请先填入Token','err'); return; }
@@ -505,6 +553,42 @@ async function syncDown(app) {
   setTimeout(()=>{ app.sSt.value='idle'; app.sTxt.value=''; }, 4000);
 }
 
+async function createSearchIssue(app) {
+  if (!app.tok.value) { toast(app,'请先保存GitHub Token','err'); return false; }
+  if (!app.sEntity.value) { toast(app,'请选择主体','err'); return false; }
+  if (!app.sTopic.value.trim()) { toast(app,'请填写技术主题','err'); return false; }
+  if (!app.sTypes.value.length) { toast(app,'请至少选择一种类型','err'); return false; }
+
+  app.sSearching.value = true;
+  app.sLastSearch.value = `${app.sEntity.value} + ${app.sTopic.value}（${app.sTypes.value.join('/')}）`;
+
+  try {
+    const tk = app.tok.value;
+    const types = app.sTypes.value.join(',');
+    const body = {
+      title: `[知识雷达检索] ${app.sEntity.value} × ${app.sTopic.value}`,
+      body: `## 检索任务\n\n- **主体**: ${app.sEntity.value}\n- **分类**: ${app.sCat.value}\n- **技术主题**: ${app.sTopic.value}\n- **类型**: ${types}\n- **时间**: ${new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'})}\n\n---\n\n请知识管家执行检索并将结果写入 data.json，然后关闭此 Issue。`,
+      labels: ['knowledge-radar-search']
+    };
+    const res = await fetch(`https://api.github.com/repos/${OWN}/${REP}/issues`, {
+      method:'POST',
+      headers:{'Authorization':'token '+tk,'Accept':'application/vnd.github.v3+json','Content-Type':'application/vnd.github.v3+json'},
+      body:JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>{});
+      throw new Error(err.message||'创建检索任务失败');
+    }
+    toast(app,'✅ 检索任务已创建，知识管家处理中…稍后刷新页面查看结果','info');
+    return true;
+  } catch(e) {
+    toast(app,'❌ 创建检索任务失败: '+e.message,'err');
+    return false;
+  } finally {
+    app.sSearching.value = false;
+  }
+}
+
 function saveLS(app) {
   try { localStorage.setItem('kkv2', JSON.stringify(app.entries.value)); } catch(e) {}
 }
@@ -515,35 +599,44 @@ function loadLS(app) {
   } catch(e) {}
 }
 
-// ===== APP =====
 createApp({
   setup() {
-    const tabs       = ref(TABS);
-    const curTab     = ref('companies');
-    const typ        = ref('all');
-    const yr         = ref('all');
-    const q          = ref('');
-    const modal      = ref(null);
-    const tok        = ref('');
-    const sSt        = ref('idle');
-    const sTxt       = ref('');
-    const lSync      = ref('');
-    const nEnt       = ref('');
-    const nEntCat    = ref('companies');
-    const toastSh    = ref(false);
-    const toastMsg   = ref('');
-    const toastTp    = ref('ok');
-    const entries    = ref([]);
+    const tabs      = ref(TABS);
+    const curTab    = ref('companies');
+    const typ       = ref('all');
+    const yr        = ref('all');
+    const q         = ref('');
+    const entries   = ref([]);
+    const modal     = ref(null);
+    const tok       = ref('');
+    const sSt       = ref('idle');
+    const sTxt      = ref('');
+    const lSync     = ref('');
+    const nEnt      = ref('');
+    const nEntCat   = ref('companies');
+    const toastSh   = ref(false);
+    const toastMsg  = ref('');
+    const toastTp   = ref('ok');
+
+    // Search state
+    const sEntity    = ref('');
+    const sCat      = ref('companies');
+    const sTopic    = ref('');
+    const sTypes    = ref(['paper']);
+    const sSearching= ref(false);
+    const sLastSearch = ref('');
 
     const f = ref({ cat:'companies', entity:'', newEnt:'', typ:'paper', tit:'', aut:'', dt:'', summ:'', url:'', kw:'' });
 
     function switchTab(id) {
       curTab.value = id;
-      yr.value = 'all';
-      q.value = '';
+      yr.value = 'all'; q.value = '';
+      if (id !== 'edit') {
+        sEntity.value = '';
+        sCat.value = 'companies';
+      }
     }
 
-    // All data: {companies:{华为:[...],...},universities:{...},authors:{...}}
     const allD = computed(() => {
       const r = {};
       for (const cat in SEED) {
@@ -562,16 +655,13 @@ createApp({
       return r;
     });
 
-    // Filtered items for current tab
     const items = computed(() => {
       if (curTab.value === 'edit') return [];
       const cat = curTab.value;
       const src = allD.value[cat] || {};
       let list = [];
       for (const entity in src) {
-        for (const it of src[entity]) {
-          list.push({ ...it, entity });
-        }
+        for (const it of src[entity]) list.push({ ...it, entity });
       }
       return list.filter(it => {
         if (typ.value !== 'all' && it.typ !== typ.value) return false;
@@ -594,9 +684,7 @@ createApp({
 
     const rows = computed(() => {
       const months = {};
-      for (const it of items.value) {
-        if (it.dt) months[it.dt.slice(0,7)] = true;
-      }
+      for (const it of items.value) { if (it.dt) months[it.dt.slice(0,7)] = true; }
       return Object.keys(months).sort().reverse();
     });
 
@@ -606,9 +694,7 @@ createApp({
       const src = allD.value[cat] || {};
       const yset = {};
       for (const entity in src) {
-        for (const it of src[entity]) {
-          if (it.dt) yset[it.dt.slice(0,4)] = true;
-        }
+        for (const it of src[entity]) { if (it.dt) yset[it.dt.slice(0,4)] = true; }
       }
       return Object.keys(yset).sort().reverse();
     });
@@ -617,13 +703,9 @@ createApp({
       return items.value.filter(it => it.dt && it.dt.startsWith(month) && it.entity === entity);
     }
 
-    // Entity groups with counts
     const grps = computed(() => {
       const r = {};
-      for (const cat in SEED) {
-        r[cat] = {};
-        for (const n in SEED[cat]) r[cat][n] = SEED[cat][n].length;
-      }
+      for (const cat in SEED) { r[cat] = {}; for (const n in SEED[cat]) r[cat][n] = SEED[cat][n].length; }
       for (const e of entries.value) {
         if (!e._cat) continue;
         const cat = e._cat;
@@ -633,17 +715,17 @@ createApp({
       return r;
     });
 
-    function countCat(cat) {
-      return Object.keys(grps.value[cat] || {}).length;
-    }
-
+    function countCat(cat) { return Object.keys(grps.value[cat] || {}).length; }
     function labelCat(c) { return {companies:'🏢公司',universities:'🏫高校',authors:'👤作者'}[c]||c; }
     function labelTyp(t) { return {paper:'📄论文',patent:'📜专利',whitepaper:'📘白皮书'}[t]||t; }
     function dotColor(t) { return {paper:'#4f9cff',patent:'#f0a04b',whitepaper:'#4fd6a8'}[t]||'#888'; }
 
     const entityOptions = computed(() => {
-      const cat = f.value.cat;
-      return Object.keys(allD.value[cat] || {}).sort();
+      return Object.keys(allD.value[f.value.cat] || {}).sort();
+    });
+
+    const allEntityOptions = computed(() => {
+      return Object.keys(allD.value[sCat.value] || {}).sort();
     });
 
     const recentEntries = computed(() => entries.value.slice().reverse().slice(0,20));
@@ -702,12 +784,18 @@ createApp({
       toast({toastSh,toastMsg,toastTp},'✅ Token已保存');
     }
 
+    async function doSearch() {
+      const ok = await createSearchIssue({tok, sEntity, sCat, sTopic, sTypes, sSearching, sLastSearch, toastSh, toastMsg, toastTp});
+    }
+
     watch(entries, () => saveLS({ entries }), { deep: true });
 
     onMounted(() => {
       tok.value  = localStorage.getItem('kktok') || '';
       lSync.value = localStorage.getItem('kklsync') || '';
       loadLS({ entries });
+      // Auto-refresh from GitHub every 30s if token available
+      if (tok.value) syncDown({tok, entries, lSync, sSt, sTxt, toastSh, toastMsg, toastTp});
     });
 
     return {
@@ -716,12 +804,13 @@ createApp({
       entries, recentEntries,
       items, cols, rows, yrs, cell,
       grps, countCat, labelCat, labelTyp, dotColor,
-      entityOptions,
+      entityOptions, allEntityOptions,
       f, nEnt, nEntCat,
       modal, openModal,
       tok, saveTok, syncUp, syncDown, sSt, sTxt, lSync,
       addEntry, rmEntry, addEntity, rmEntity, resetForm,
       toastSh, toastMsg, toastTp,
+      sEntity, sCat, sTopic, sTypes, sSearching, sLastSearch, doSearch,
     };
   }
 }).mount('#app');
