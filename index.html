@@ -12,6 +12,11 @@
   --paper:#4f9cff;--patent:#f0a04b;--whitepaper:#4fd6a8;
   --danger:#ff5757;--success:#4fd6a8;--warn:#f0a04b;
 }
+body.light{
+  --bg:#f4f5f8;--surface:#ffffff;--surface2:#e8e9f2;--border:#cdd0db;
+  --text:#1a1d27;--text-dim:#6b7085;
+  --surface-hover:#dddce5;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
@@ -165,6 +170,7 @@ select{cursor:pointer}
       :class="{active:curTab===t.id}"
       @click="switchTab(t.id)">{{ t.name }}</button>
   </div>
+  <button @click="toggleTheme" :title="isLight?'切换到暗色':'切换到亮色'" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1.1rem;padding:4px 8px;border-radius:6px;color:var(--text-dim)">{{ isLight ? '🌙' : '☀️' }}</button>
 </header>
 
 <!-- ===== MATRIX VIEW ===== -->
@@ -786,6 +792,14 @@ createApp({
     function labelTyp(t) { return {paper:'📄论文',patent:'📜专利',whitepaper:'📘白皮书'}[t]||t; }
     function dotColor(t) { return {paper:'#4f9cff',patent:'#f0a04b',whitepaper:'#4fd6a8'}[t]||'#888'; }
 
+    const isLight = ref(localStorage.getItem('kktheme') === 'light');
+    if (isLight.value) document.body.classList.add('light');
+    function toggleTheme() {
+      isLight.value = !isLight.value;
+      document.body.classList.toggle('light', isLight.value);
+      localStorage.setItem('kktheme', isLight.value ? 'light' : 'dark');
+    }
+
     const entityOptions = computed(() => {
       return Object.keys(allD.value[f.value.cat] || {}).sort();
     });
@@ -876,6 +890,7 @@ createApp({
       tabs, curTab, switchTab,
       typ, yr, q,
       entries, recentEntries, entriesByCat, collapsedCats, collapsedEntities,
+      isLight, toggleTheme,
       items, cols, rows, yrs, cell,
       grps, countCat, labelCat, labelTyp, dotColor,
       entityOptions, allEntityOptions,
