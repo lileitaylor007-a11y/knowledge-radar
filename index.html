@@ -541,11 +541,16 @@ async function syncDown(app) {
     const text = b64de(d.content);
     const parsed = JSON.parse(text);
     if (!parsed.entries||!Array.isArray(parsed.entries)) throw new Error('数据格式错误');
-    app.entries.value = parsed.entries;
+    // Merge: keep local entries, add only new ones from GitHub (dedup by id)
+    const existingIds = new Set(app.entries.value.map(e => e.id));
+    const newOnes = parsed.entries.filter(e => !existingIds.has(e.id));
+    app.entries.value = [...app.entries.value, ...newOnes];
     saveLS(app);
+    saveEntities(app);
     app.lSync.value = parsed.updated ? new Date(parsed.updated).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}) : '已加载';
-    app.sSt.value='ok'; app.sTxt.value='✅ 已加载'+parsed.entries.length+'条';
-    toast(app,'📥 已从GitHub加载'+parsed.entries.length+'条');
+    const total = app.entries.value.length;
+    app.sSt.value='ok'; app.sTxt.value='✅ 已合并'+newOnes.length+'条新条目（共'+total+'条）';
+    toast(app,'📥 已从GitHub合并'+newOnes.length+'条新条目（共'+total+'条）');
   } catch(e) {
     app.sSt.value='err'; app.sTxt.value='❌ '+e.message;
     toast(app,'加载失败:'+e.message,'err');
@@ -790,14 +795,16 @@ createApp({
       const name = nEnt.value.trim();
       if (!name) return;
       const cat = nEntCat.value;
-      const existing = allD.value[cat] && allD.value[cat][name];
-      if (existing) { toast({toastSh,toastMsg,toastTp},'「'+name+'」已存在','err'); return; }
+      // Check both allD (SEED+entries) and kkentities (persisted entity names)
+      const inAllD = allD.value[cat] && allD.value[cat][name];
+      const userEnts = loadEntities();
+      const inKk = userEnts[cat] && userEnts[cat][name];
+      if (inAllD || inKk) { toast({toastSh,toastMsg,toastTp},'「'+name+'」已存在','err'); return; }
       entries.value = [...entries.value, {
         id:'ent'+Date.now(), tit:'[主体]'+name, typ:'paper', dt:'2025-01', entity:name,
         aut:'', summ:'', url:'#', kw:'', _cat:cat, _ent:true
       }];
       nEnt.value = '';
-      // Persist entity list separately
       saveEntities({ entries });
       toast({toastSh,toastMsg,toastTp},'✅ 已添加「'+name+'」');
     }
