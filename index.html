@@ -4,17 +4,26 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>知识雷达 · 论文/专利/白皮书可视化</title>
-<script src="https://cdn.bootcdn.net/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
+<script src="https://unpkg.com/vue@3.4.21/dist/vue.global.js"></script>
 <style>
-:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#232736;--border:#2e3348;--accent:#4f9cff;--text:#e8eaf0;--text-dim:#8b90a7;--paper:#4f9cff;--patent:#f0a04b;--whitepaper:#4fd6a8;--danger:#ff5757;--success:#4fd6a8}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#232736;--border:#2e3348;
+  --accent:#4f9cff;--text:#e8eaf0;--text-dim:#8b90a7;
+  --paper:#4f9cff;--patent:#f0a04b;--whitepaper:#4fd6a8;
+  --danger:#ff5757;--success:#4fd6a8;
+}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* Header */
 header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;gap:1.5rem;height:60px;position:sticky;top:0;z-index:100}
 header h1{font-size:1.1rem;font-weight:700;color:var(--accent);white-space:nowrap}
 .tab-bar{display:flex;gap:0.25rem}
 .tab-btn{background:transparent;border:none;color:var(--text-dim);padding:0.4rem 1rem;border-radius:8px;cursor:pointer;font-size:0.85rem;transition:all .15s}
 .tab-btn:hover{background:var(--surface2);color:var(--text)}
 .tab-btn.active{background:var(--accent);color:#fff;font-weight:600}
+
+/* Controls bar */
 .controls{background:var(--surface);border-bottom:1px solid var(--border);padding:0.75rem 2rem;display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
 .filter-group{display:flex;align-items:center;gap:0.5rem}
 .filter-label{font-size:0.75rem;color:var(--text-dim);white-space:nowrap}
@@ -26,6 +35,8 @@ select{cursor:pointer}
 .legend-item{display:flex;align-items:center;gap:0.35rem;font-size:0.75rem;color:var(--text-dim)}
 .dot{width:8px;height:8px;border-radius:50%}
 .dot.paper{background:var(--paper)}.dot.patent{background:var(--patent)}.dot.whitepaper{background:var(--whitepaper)}
+
+/* Matrix */
 .matrix-wrap{padding:1.5rem 2rem 2rem;overflow-x:auto}
 .matrix{border-collapse:separate;border-spacing:3px;min-width:100%}
 .matrix th,.matrix td{border-radius:6px;vertical-align:top}
@@ -43,6 +54,8 @@ select{cursor:pointer}
 .cell-tag a.hl:hover{color:var(--accent)}
 .cell-tag .ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:140px}
 .cell-empty{color:#2e3348;font-size:0.7rem;padding:0.3rem}
+
+/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px)}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:580px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.5)}
 .modal-head{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:0.75rem}
@@ -64,9 +77,13 @@ select{cursor:pointer}
 .modal-del{display:inline-flex;align-items:center;gap:0.4rem;background:transparent;border:1px solid var(--danger);color:var(--danger);border-radius:8px;padding:0.5rem 1.1rem;font-size:0.82rem;cursor:pointer;transition:all .15s}
 .modal-del:hover{background:var(--danger);color:#fff}
 .modal-actions{display:flex;gap:0.75rem;flex-wrap:wrap}
+
+/* Empty state */
 .empty-state{text-align:center;padding:4rem 2rem;color:var(--text-dim)}
 .empty-state .icon{font-size:2.5rem;margin-bottom:0.75rem}
 .empty-state h3{font-size:1rem;margin-bottom:0.4rem;color:var(--text)}
+
+/* Edit page */
 .edit-page{padding:2rem;max-width:900px;margin:0 auto}
 .edit-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem}
 .edit-section h2{font-size:1rem;font-weight:700;color:var(--accent);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border)}
@@ -77,7 +94,7 @@ select{cursor:pointer}
 .form-group textarea{min-height:60px}
 .btn-row{display:flex;gap:0.75rem;margin-top:0.5rem;flex-wrap:wrap}
 .btn{border:none;border-radius:8px;padding:0.5rem 1.2rem;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all .15s}
-.btn-pri{background:var(--accent);color:#fff}.btn-pri:hover{opacity:.85}
+.btn-pri{background:var(--accent);color:#fff}.btn-pri:hover{opacity:.85}.btn-pri:disabled{opacity:.4;cursor:not-allowed}
 .btn-sec{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.btn-sec:hover{border-color:var(--accent)}
 .btn-del{background:transparent;border:1px solid var(--danger);color:var(--danger)}.btn-del:hover{background:var(--danger);color:#fff}
 .btn-sm{border:none;border-radius:6px;padding:0.25rem 0.6rem;font-size:0.72rem;cursor:pointer;transition:all .12s}
@@ -92,18 +109,25 @@ select{cursor:pointer}
 .entry-row .info{flex:1;min-width:0}
 .entry-row .ttl{font-size:0.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .entry-row .meta{font-size:0.72rem;color:var(--text-dim)}
-.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.6rem 1.2rem;font-size:0.82rem;color:var(--text);z-index:2000;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:all .3s;pointer-events:none}
-.toast.ok{border-color:var(--success);color:var(--success)}
-.toast.err{border-color:var(--danger);color:var(--danger)}
+.cat-hdr{font-size:0.82rem;color:var(--text-dim);margin:1rem 0 0.4rem 0;font-weight:600}
+
+/* Sync panel */
 .sync-note{background:linear-gradient(135deg,#1a1d27,#232736);border:1px solid var(--accent);border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.5rem}
 .sync-note h3{font-size:0.88rem;color:var(--accent);margin-bottom:0.3rem}
 .sync-note p{font-size:0.78rem;color:var(--text-dim)}
 .sync-st{font-size:0.78rem;padding:0.3rem 0.6rem;border-radius:6px}
 .sync-st.idle{color:var(--text-dim)}.sync-st.run{color:var(--accent)}.sync-st.ok{color:var(--success)}.sync-st.err{color:var(--danger)}
-.cat-hdr{font-size:0.82rem;color:var(--text-dim);margin:1rem 0 0.4rem 0;font-weight:600}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:0.6rem 1.2rem;font-size:0.82rem;color:var(--text);z-index:2000;box-shadow:0 8px 24px rgba(0,0,0,.4);transition:all .3s;pointer-events:none}
+.toast.ok{border-color:var(--success);color:var(--success)}
+.toast.err{border-color:var(--danger);color:var(--danger)}
+
+/* Scrollbar */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
 @media(max-width:768px){.form-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -113,136 +137,223 @@ select{cursor:pointer}
 <header>
   <h1>🧠 知识雷达</h1>
   <div class="tab-bar">
-    <button v-for="t in tabs" :key="t.id" class="tab-btn" :class="{active:curTab===t.id}" @click="curTab=t.id;yr='all';q=''">{{t.name}}</button>
+    <button
+      v-for="t in tabs"
+      :key="t.id"
+      class="tab-btn"
+      :class="{active:curTab===t.id}"
+      @click="switchTab(t.id)">{{ t.name }}</button>
   </div>
 </header>
 
-<!-- VIEW -->
-<template v-if="curTab!=='edit'">
-<div class="controls">
-  <div class="filter-group"><span class="filter-label">年份</span><select v-model="yr"><option value="all">全部</option><option v-for="y in yrs" :key="y" :value="y">{{y}}</option></select></div>
-  <div class="filter-group"><span class="filter-label">类型</span><select v-model="typ"><option value="all">全部</option><option value="paper">📄论文</option><option value="patent">📜专利</option><option value="whitepaper">📘白皮书</option></select></div>
-  <div class="filter-group"><span class="filter-label">🔍</span><input v-model="q" placeholder="搜索…" style="width:180px"/></div>
-  <div class="legend">
-    <div class="legend-item"><span class="dot paper"></span>论文</div>
-    <div class="legend-item"><span class="dot patent"></span>专利</div>
-    <div class="legend-item"><span class="dot whitepaper"></span>白皮书</div>
+<!-- ===== MATRIX VIEW (companies / universities / authors) ===== -->
+<div v-if="curTab!=='edit'">
+  <div class="controls">
+    <div class="filter-group">
+      <span class="filter-label">年份</span>
+      <select v-model="yr">
+        <option value="all">全部</option>
+        <option v-for="y in yrs" :key="y" :value="y">{{ y }}</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">类型</span>
+      <select v-model="typ">
+        <option value="all">全部</option>
+        <option value="paper">📄 论文</option>
+        <option value="patent">📜 专利</option>
+        <option value="whitepaper">📘 白皮书</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">🔍</span>
+      <input type="search" v-model="q" placeholder="搜索标题/作者/关键词…" />
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="dot paper"></div>论文</div>
+      <div class="legend-item"><div class="dot patent"></div>专利</div>
+      <div class="legend-item"><div class="dot whitepaper"></div>白皮书</div>
+    </div>
+  </div>
+
+  <!-- Matrix -->
+  <div class="matrix-wrap" v-if="rows.length">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="corner row-header"></th>
+          <th class="col-header" v-for="c in cols" :key="c">{{ c }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="r in rows" :key="r">
+          <td class="row-header">{{ r }}</td>
+          <td v-for="c in cols" :key="c">
+            <div class="cell-items">
+              <div
+                v-for="it in cell(r,c)"
+                :key="it.id"
+                class="cell-tag"
+                :class="it.typ"
+                :title="it.tit"
+                @click="openModal(it)">
+                <span class="tdot"></span>
+                <a v-if="it.url && it.url!='#'" :href="it.url" target="_blank" class="hl" @click.stop>{{ it.tit }}</a>
+                <span v-else class="ttl">{{ it.tit }}</span>
+              </div>
+              <div v-if="!cell(r,c).length" class="cell-empty">—</div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" v-else>
+    <div class="icon">📭</div>
+    <h3>暂无数据</h3>
+    <p>切换到「✏️ 编辑」添加论文、专利或白皮书</p>
   </div>
 </div>
 
-<div class="matrix-wrap" v-if="rows.length">
-  <table class="matrix">
-    <thead>
-      <tr>
-        <th class="corner row-header">年月/主体</th>
-        <th class="col-header" v-for="c in cols" :key="c">{{c}}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="r in rows" :key="r">
-        <td class="row-header">{{r}}</td>
-        <td v-for="c in cols" :key="c">
-          <div class="cell-items">
-            <div v-for="it in cell(r,c)" :key="it.id" class="cell-tag" :class="it.typ" :title="it.tit">
-              <a v-if="it.url&&it.url!='#'" :href="it.url" target="_blank" class="hl" @click.stop>
-                <span class="tdot"></span><span class="ttl">{{it.tit}}</span>
-              </a>
-              <template v-else>
-                <span class="tdot" @click="modal=it" style="cursor:pointer"></span>
-                <span class="ttl" @click="modal=it" style="cursor:pointer">{{it.tit}}</span>
-              </template>
-            </div>
-          </div>
-          <div v-if="!cell(r,c).length" class="cell-empty">—</div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<div class="empty-state" v-else><div class="icon">📂</div><h3>暂无记录</h3><p>切换分类或添加新条目</p></div>
-</template>
-
-<!-- EDIT -->
+<!-- ===== EDIT VIEW ===== -->
 <div class="edit-page" v-if="curTab==='edit'">
 
-<!-- Sync -->
-<div class="edit-section" style="border-color:var(--accent)">
-  <h2>☁️ 数据云同步</h2>
-  <div class="sync-note"><p>数据保存在GitHub仓库data.json，换设备后填入Token一键恢复。Token仅存本浏览器。</p></div>
-  <div class="form-grid">
-    <div class="form-group full">
-      <label>GitHub Token</label>
-      <div style="display:flex;gap:0.5rem">
-        <input type="password" v-model="tok" placeholder="ghp_xxxxxxxx" style="flex:1"/>
-        <button class="btn btn-sec" @click="saveTok">保存</button>
+  <!-- Sync -->
+  <div class="edit-section">
+    <h2>☁️ 数据云同步</h2>
+    <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:0.75rem">数据保存在GitHub仓库，换设备后填入Token一键恢复。Token仅存本浏览器。</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>GitHub Token</label>
+        <input type="password" v-model="tok" placeholder="ghp_xxxxxxxx" />
       </div>
-      <p style="font-size:0.72rem;color:var(--text-dim);margin-top:0.3rem">
-        <a href="https://github.com/settings/tokens/new" target="_blank" style="color:var(--accent)">创建Token →</a>（需勾选repo权限）
-      </p>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-sec" @click="saveTok">💾 保存Token</button>
+      <button class="btn btn-pri" @click="syncUp" :disabled="sSt==='run'">{{ sSt==='run'?'⏳同步中':'☁️ 同步到GitHub' }}</button>
+      <button class="btn btn-sec" @click="syncDown">📥 从GitHub加载</button>
+    </div>
+    <p v-if="sTxt" style="margin-top:0.5rem;font-size:0.78rem" :class="'sync-st '+sSt">{{ sTxt }}</p>
+    <p v-if="lSync" style="font-size:0.72rem;color:var(--text-dim);margin-top:0.4rem">上次同步：{{ lSync }}</p>
+  </div>
+
+  <!-- Manage entities -->
+  <div class="edit-section">
+    <h2>🏢 添加公司 / 高校 / 作者</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>主体名称</label>
+        <input type="text" v-model="nEnt" placeholder="如：比亚迪、清华大学、张明" @keyup.enter="addEntity" />
+      </div>
+      <div class="form-group">
+        <label>分类</label>
+        <select v-model="nEntCat">
+          <option value="companies">🏢 公司</option>
+          <option value="universities">🏫 高校</option>
+          <option value="authors">👤 作者</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-pri" @click="addEntity">✅ 添加主体</button>
+    </div>
+
+    <div v-for="(names,cat) in grps" :key="cat" style="margin-top:1rem">
+      <div class="cat-hdr">{{ labelCat(cat) }} ({{ countCat(cat) }})</div>
+      <div class="entity-list">
+        <div v-for="(cnt,name) in names" :key="name" class="entity-item">
+          <div>
+            <div class="nm">{{ name }}</div>
+            <div class="ct">{{ cnt }}条记录</div>
+          </div>
+          <div class="ac">
+            <button class="btn-sm btn-sm-del" @click="rmEntity(cat,name)">删除</button>
+          </div>
+        </div>
+        <div v-if="!countCat(cat)" style="color:var(--text-dim);font-size:0.78rem;text-align:center;padding:0.5rem 0">暂无</div>
+      </div>
     </div>
   </div>
-  <div class="btn-row">
-    <button class="btn btn-pri" @click="syncUp" :disabled="!tok||sSt==='run'">{{sSt==='run'?'⏳同步中':'☁️ 同步到GitHub'}}</button>
-    <button class="btn btn-sec" @click="syncDown" :disabled="!tok||sSt==='run'">📥 从GitHub加载</button>
-    <span class="sync-st" :class="sSt">{{sTxt}}</span>
-  </div>
-  <p v-if="lSync" style="font-size:0.72rem;color:var(--text-dim);margin-top:0.4rem">上次同步：{{lSync}}</p>
-</div>
 
-<!-- Add Entity -->
-<div class="edit-section">
-  <h2>🏢 添加公司 / 高校 / 作者</h2>
-  <div class="form-grid">
-    <div class="form-group full"><label>主体名称</label><input v-model="nEnt" placeholder="如：比亚迪、国家电网、张明" @keyup.enter="addEntity"/></div>
-    <div class="form-group full"><label>分类</label><select v-model="nEntCat"><option value="companies">🏢 公司</option><option value="universities">🏫 高校</option><option value="authors">👤 作者</option></select></div>
+  <!-- Add entry -->
+  <div class="edit-section">
+    <h2>📝 添加论文 / 专利 / 白皮书</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>分类</label>
+        <select v-model="f.cat">
+          <option value="companies">🏢 公司</option>
+          <option value="universities">🏫 高校</option>
+          <option value="authors">👤 作者</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>发布主体</label>
+        <select v-model="f.entity">
+          <option value="">— 选择 —</option>
+          <option v-for="e in entityOptions" :key="e" :value="e">{{ e }}</option>
+        </select>
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>新建主体（上面没有则填这里）</label>
+        <input type="text" v-model="f.newEnt" placeholder="自动创建新主体" />
+      </div>
+      <div class="form-group">
+        <label>类型</label>
+        <select v-model="f.typ">
+          <option value="paper">📄 论文</option>
+          <option value="patent">📜 专利</option>
+          <option value="whitepaper">📘 白皮书</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>发布时间（年-月）</label>
+        <input type="text" v-model="f.dt" placeholder="2026-03" />
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>标题 *</label>
+        <input type="text" v-model="f.tit" placeholder="完整标题" />
+      </div>
+      <div class="form-group">
+        <label>作者</label>
+        <input type="text" v-model="f.aut" placeholder="作者姓名" />
+      </div>
+      <div class="form-group">
+        <label>关键词（逗号分隔）</label>
+        <input type="text" v-model="f.kw" placeholder="如：SiC,800V" />
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>原文链接</label>
+        <input type="text" v-model="f.url" placeholder="https://...留空则无链接" />
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label>内容简介</label>
+        <textarea v-model="f.summ" placeholder="简要描述…"></textarea>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-pri" @click="addEntry" :disabled="!f.tit.trim()">✅ 添加条目</button>
+      <button class="btn btn-sec" @click="resetForm">🔄 清空</button>
+    </div>
   </div>
-  <div class="btn-row"><button class="btn btn-pri" @click="addEntity" :disabled="!nEnt.trim()">✅ 添加主体</button></div>
 
-  <div v-for="(names,cat) in grps" :key="cat" style="margin-top:1rem">
-    <div class="cat-hdr">{{lbl(cat)}} ({{Object.keys(names).length}})</div>
+  <!-- Entry list -->
+  <div class="edit-section" v-if="entries.length">
+    <h2>📋 已添加的条目（共 {{ entries.length }} 条）</h2>
     <div class="entity-list">
-      <div v-for="(cnt,name) in names" :key="name" class="entity-item">
-        <div><div class="nm">{{name}}</div><div class="ct">{{cnt}}条记录</div></div>
-        <div class="ac"><button class="btn-sm btn-sm-del" @click="rmEntity(cat,name)">删除</button></div>
+      <div v-for="e in recentEntries" :key="e.id" class="entry-row">
+        <div class="tdot" :style="{background: dotColor(e.typ)}"></div>
+        <div class="info">
+          <div class="ttl">{{ e.tit }}</div>
+          <div class="meta">{{ e.entity }} · {{ e.dt }} · {{ labelTyp(e.typ) }}</div>
+        </div>
+        <button class="btn-sm btn-sm-del" @click="rmEntry(e.id)">删除</button>
       </div>
-      <div v-if="!Object.keys(names).length" style="color:var(--text-dim);font-size:0.78rem;text-align:center;padding:0.5rem 0">暂无</div>
+      <div v-if="entries.length>20" style="font-size:0.78rem;color:var(--text-dim);text-align:center;margin-top:0.5rem">显示最近20条，共{{ entries.length }}条</div>
     </div>
   </div>
-</div>
-
-<!-- Add Entry -->
-<div class="edit-section">
-  <h2>📝 添加条目</h2>
-  <div class="form-grid">
-    <div class="form-group"><label>分类</label><select v-model="f.cat"><option value="companies">🏢公司</option><option value="universities">🏫高校</option><option value="authors">👤作者</option></select></div>
-    <div class="form-group"><label>发布主体</label><select v-model="f.entity"><option value="">— 选择 —</option><option v-for="e in ents" :key="e" :value="e">{{e}}</option></select></div>
-    <div class="form-group full"><label>新建主体（上面没有则填这里）</label><input v-model="f.newEnt" placeholder="自动创建"/></div>
-    <div class="form-group"><label>类型</label><select v-model="f.typ"><option value="paper">📄论文</option><option value="patent">📜专利</option><option value="whitepaper">📘白皮书</option></select></div>
-    <div class="form-group"><label>发布时间</label><input v-model="f.dt" type="month"/></div>
-    <div class="form-group full"><label>标题 *</label><input v-model="f.tit" placeholder="完整标题"/></div>
-    <div class="form-group"><label>作者</label><input v-model="f.aut" placeholder="作者姓名"/></div>
-    <div class="form-group"><label>原文链接</label><input v-model="f.url" placeholder="https://...留空则无链接"/></div>
-    <div class="form-group full"><label>内容简介</label><textarea v-model="f.summ" placeholder="简要描述…" rows="2"/></div>
-    <div class="form-group full"><label>关键词（逗号分隔）</label><input v-model="f.kw" placeholder="如：SiC,800V"/></div>
-  </div>
-  <div class="btn-row">
-    <button class="btn btn-pri" @click="addEntry" :disabled="!f.tit.trim()">✅ 添加条目</button>
-    <button class="btn btn-sec" @click="f={cat:'companies',entity:'',newEnt:'',typ:'paper',tit:'',aut:'',dt:'',summ:'',url:'',kw:''}">🔄 清空</button>
-  </div>
-</div>
-
-<!-- Entry list -->
-<div class="edit-section" v-if="ents2.length">
-  <h2>📋 已添加的条目（共 {{ents2.length}} 条）</h2>
-  <div class="entity-list">
-    <div v-for="e in ents2.slice().reverse().slice(0,20)" :key="e.id" class="entry-row">
-      <span class="tdot" :class="e.typ" style="margin-top:2px"></span>
-      <div class="info"><div class="ttl">{{e.tit}}</div><div class="meta">{{e.entity}} · {{e.dt}} · {{lbl2(e.typ)}}</div></div>
-      <button class="btn-sm btn-sm-del" @click="rmEntry(e.id)">删除</button>
-    </div>
-  </div>
-  <p v-if="ents2.length>20" style="font-size:0.78rem;color:var(--text-dim);text-align:center;margin-top:0.5rem">显示最近20条，共{{ents2.length}}条</p>
-</div>
 
 </div>
 
@@ -250,349 +361,370 @@ select{cursor:pointer}
 <div class="modal-overlay" v-if="modal" @click.self="modal=null">
   <div class="modal">
     <div class="modal-head">
-      <span class="modal-badge" :class="modal.typ">{{lbl2(modal.typ)}}</span>
-      <div class="modal-title">{{modal.tit||modal.title}}</div>
+      <span class="modal-badge" :class="modal.typ">{{ labelTyp(modal.typ) }}</span>
+      <div class="modal-title">{{ modal.tit }}</div>
       <button class="modal-close" @click="modal=null">×</button>
     </div>
     <div class="modal-body">
       <div class="modal-meta">
-        <span class="lb">作者</span><span class="vl">{{modal.aut||'—'}}</span>
-        <span class="lb">发布时间</span><span class="vl">{{modal.dt}}</span>
-        <span class="lb">发布主体</span><span class="vl">{{modal.entity}}</span>
-        <span class="lb" v-if="modal.kw">关键词</span><span class="vl" v-if="modal.kw">{{modal.kw}}</span>
+        <span class="lb">发布主体</span><span class="vl">{{ modal.entity }}</span>
+        <span class="lb">作者</span><span class="vl">{{ modal.aut || '—' }}</span>
+        <span class="lb">时间</span><span class="vl">{{ modal.dt }}</span>
+        <span class="lb" v-if="modal.kw">关键词</span><span class="vl" v-if="modal.kw">{{ modal.kw }}</span>
       </div>
-      <div class="modal-summary">{{modal.summ||'暂无简介'}}</div>
+      <div class="modal-summary" v-if="modal.summ">{{ modal.summ }}</div>
       <div class="modal-actions">
-        <a v-if="modal.url&&modal.url!='#'" :href="modal.url" target="_blank" class="modal-link">🔗 查看原文</a>
-        <span v-else class="modal-link off">🔗 暂无链接</span>
-        <button class="modal-del" @click="rmEntry(modal.id);modal=null">🗑 删除</button>
+        <a v-if="modal.url && modal.url!='#'" :href="modal.url" target="_blank" class="modal-link">🔗 查看原文</a>
+        <span v-else class="modal-link off">🔗 无链接</span>
+        <button class="modal-del" @click="rmEntry(modal.id);modal=null">🗑️ 删除</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="toast" :class="toastTp" v-if="toastSh">{{toastMsg}}</div>
-</div>
+<!-- Toast -->
+<div class="toast" :class="toastTp" v-if="toastSh">{{ toastMsg }}</div>
+
+</div><!-- end #app -->
 
 <script>
-(function(){
-var Vue3=Vue;
-var ref=Vue3.ref,computed=Vue3.computed,watch=Vue3.watch,onMounted=Vue3.onMounted;
+const { createApp, ref, computed, watch, onMounted } = Vue;
 
-// Seed data
-var SEED={
-  companies:{
-    "华为":[{"id":"hw1","tit":"DriveONE 800V高压电驱动平台白皮书","typ":"whitepaper","dt":"2025-11","entity":"华为","aut":"华为数字能源","summ":"详细阐述华为800V SiC高压电驱动平台架构、核心功率器件选型及热管理方案。","url":"https://www.huawei.com","kw":"800V,SiC,电驱动"}],
-    "Wolfspeed":[{"id":"wc1","tit":"10kV SiC MOSFET for EV Inverter","typ":"paper","dt":"2026-03","entity":"Wolfspeed","aut":"M. Mudai et al.","summ":"IEEE PESC 2026论文，10kV SiC MOSFET在车载逆变器的应用与开关损耗模型。","url":"#","kw":"10kV,SiC MOSFET,逆变器"}],
-    "汇川技术":[{"id":"hc1","tit":"乘用车电驱动系统专利族","typ":"patent","dt":"2025-12","entity":"汇川技术","aut":"深圳市汇川技术股份有限公司","summ":"涵盖电机控制器硬件布局、功率模块散热结构与软件OTA升级方法。","url":"#","kw":"电驱动,电机控制,专利"}],
-    "Infineon":[{"id":"if1","tit":"Hybrid IGBT-SiC Module for 800V EV","typ":"paper","dt":"2025-10","entity":"Infineon","aut":"Infineon Technologies","summ":"Hybrid IGBT-SiC混合模块方案，中低负载区间效率提升3%。","url":"#","kw":"IGBT,SiC,800V"}]
+// ===== SEED DATA =====
+const SEED = {
+  companies: {
+    "华为": [
+      { id:"hw1", tit:"DriveONE 800V高压电驱动平台白皮书", typ:"whitepaper", dt:"2025-11", entity:"华为", aut:"华为数字能源", summ:"详细阐述华为800V SiC高压电驱动平台架构、核心功率器件选型及热管理方案。", url:"#", kw:"800V,SiC,电驱动" }
+    ],
+    "Wolfspeed": [
+      { id:"wc1", tit:"10kV SiC MOSFET for EV Inverter", typ:"paper", dt:"2026-03", entity:"Wolfspeed", aut:"M. Mudai et al.", summ:"IEEE PESC 2026论文，10kV SiC MOSFET在车载逆变器的应用与开关损耗模型。", url:"#", kw:"10kV,SiC MOSFET,逆变器" }
+    ],
+    "汇川技术": [
+      { id:"hc1", tit:"乘用车电驱动系统专利族", typ:"patent", dt:"2025-12", entity:"汇川技术", aut:"深圳市汇川技术股份有限公司", summ:"涵盖电机控制器硬件布局、功率模块散热结构与软件OTA升级方法。", url:"#", kw:"电驱动,电机控制,专利" }
+    ],
+    "Infineon": [
+      { id:"if1", tit:"Hybrid IGBT-SiC Module for 800V EV", typ:"paper", dt:"2025-10", entity:"Infineon", aut:"Infineon Technologies", summ:"Hybrid IGBT-SiC混合模块方案，中低负载区间效率提升3%。", url:"#", kw:"IGBT,SiC,800V" }
+    ]
   },
-  universities:{
-    "清华大学":[{"id":"thu1","tit":"SiC MOSFET短路特性与保护策略","typ":"paper","dt":"2025-09","entity":"清华大学","aut":"电机系李强团队","summ":"IEEE Trans on Power Electronics，研究SiC MOSFET短路故障与快速关断保护方案。","url":"#","kw":"SiC,短路保护"}],
-    "华中科技大学":[{"id":"hust1","tit":"SiC功率模块3D封装热仿真","typ":"paper","dt":"2025-08","entity":"华中科技大学","aut":"电气与电子工程学院","summ":"基于TaC模型的3D堆叠SiC模块瞬态热阻抗仿真方法。","url":"#","kw":"3D封装,热仿真,SiC"}]
+  universities: {
+    "清华大学": [
+      { id:"thu1", tit:"SiC MOSFET短路特性与保护策略", typ:"paper", dt:"2025-09", entity:"清华大学", aut:"电机系李强团队", summ:"IEEE Trans on Power Electronics，研究SiC MOSFET短路故障与快速关断保护方案。", url:"#", kw:"SiC,短路保护" }
+    ],
+    "华中科技大学": [
+      { id:"hust1", tit:"SiC功率模块3D封装热仿真", typ:"paper", dt:"2025-08", entity:"华中科技大学", aut:"电气与电子工程学院", summ:"基于TaC模型的3D堆叠SiC模块瞬态热阻抗仿真方法。", url:"#", kw:"3D封装,热仿真,SiC" }
+    ]
   },
-  authors:{}
+  authors: {}
 };
 
-// State
-var data=ref([]); // user entries
-var curTab=ref('companies');
-var typ=ref('all');
-var yr=ref('all');
-var q=ref('');
-var modal=ref(null);
-var tok=ref('');
-var sSt=ref('idle');
-var sTxt=ref('');
-var lSync=ref('');
-var nEnt=ref('');
-var nEntCat=ref('companies');
-var toastSh=ref(false);
-var toastMsg=ref('');
-var toastTp=ref('ok');
-var f=ref({cat:'companies',entity:'',newEnt:'',typ:'paper',tit:'',aut:'',dt:'',summ:'',url:'',kw:''});
-
-// Helpers
-function lbl(c){return{companies:'🏢公司',universities:'🏫高校',authors:'👤作者'}[c]||c;}
-function lbl2(t){return{paper:'📄论文',patent:'📜专利',whitepaper:'📘白皮书'}[t]||t;}
-function tost(msg,tp){
-  toastMsg.value=msg;toastTp.value=tp;toastSh.value=true;
-  setTimeout(function(){toastSh.value=false;},2500);
-}
-
-// All data merged: {companies:{华为:[{...}],...},universities:{...},authors:{...}}
-var allD=computed(function(){
-  var r={};
-  for(var cat in SEED){r[cat]={};for(var n in SEED[cat])r[cat][n]=[].concat(SEED[cat][n]);}
-  for(var i=0;i<data.value.length;i++){
-    var e=data.value[i];
-    if(!e._cat)continue;
-    var cat=e._cat;
-    if(!r[cat])r[cat]={};
-    if(!r[cat][e.entity])r[cat][e.entity]=[];
-    var found=false;
-    for(var j=0;j<r[cat][e.entity].length;j++){if(r[cat][e.entity][j].id===e.id){found=true;break;}}
-    if(!found)r[cat][e.entity].push(e);
-  }
-  return r;
-});
-
-// Items for current tab with filters
-var items=computed(function(){
-  if(curTab.value==='edit')return[];
-  var cat=curTab.value;
-  var src=allD.value[cat]||{};
-  var list=[];
-  for(var entity in src){
-    for(var i=0;i<src[entity].length;i++){
-      var it=Object.assign({},src[entity][i]);
-      it.entity=entity;
-      list.push(it);
-    }
-  }
-  var result=[];
-  for(var i=0;i<list.length;i++){
-    var it=list[i];
-    if(typ.value!=='all'&&it.typ!==typ.value)continue;
-    if(yr.value!=='all'&&(!it.dt||!it.dt.startsWith(yr.value)))continue;
-    if(q.value){
-      var qq=q.value.toLowerCase();
-      if(!it.tit.toLowerCase().includes(qq)&&!(it.aut||'').toLowerCase().includes(qq)&&!(it.kw||'').toLowerCase().includes(qq))continue;
-    }
-    result.push(it);
-  }
-  return result;
-});
-
-var cols=computed(function(){
-  if(curTab.value==='edit')return[];
-  // Only show entities that have items in the filtered list
-  var seen={};
-  for(var i=0;i<items.value.length;i++){seen[items.value[i].entity]=true;}
-  return Object.keys(seen).sort();
-});
-
-var rows=computed(function(){
-  var months={};
-  for(var i=0;i<items.value.length;i++){
-    var m=items.value[i].dt;
-    if(m)months[m.slice(0,7)]=true;
-  }
-  return Object.keys(months).sort().reverse();
-});
-
-var yrs=computed(function(){
-  if(curTab.value==='edit')return[];
-  var cat=curTab.value;
-  var src=allD.value[cat]||{};
-  var yset={};
-  for(var entity in src){
-    for(var i=0;i<src[entity].length;i++){
-      var y=src[entity][i].dt;
-      if(y)yset[y.slice(0,4)]=true;
-    }
-  }
-  return Object.keys(yset).sort().reverse();
-});
-
-// Entity groups with counts
-var grps=computed(function(){
-  var r={};
-  for(var cat in SEED){r[cat]={};for(var n in SEED[cat])r[cat][n]=SEED[cat][n].length;}
-  for(var i=0;i<data.value.length;i++){
-    var e=data.value[i];
-    if(!e._cat)continue;
-    var cat=e._cat;
-    if(!r[cat])r[cat]={};
-    r[cat][e.entity]=(r[cat][e.entity]||0)+1;
-  }
-  return r;
-});
-
-// Entity options for dropdown
-var ents=computed(function(){
-  var cat=f.value.cat;
-  var src=allD.value[cat]||{};
-  return Object.keys(src).sort();
-});
-
-// User entries list (for edit view)
-var ents2=computed(function(){return data.value;});
-
-function cell(month,entity){
-  var result=[];
-  for(var i=0;i<items.value.length;i++){
-    var it=items.value[i];
-    if(it.dt&&it.dt.startsWith(month)&&it.entity===entity)result.push(it);
-  }
-  return result;
-}
-
-// Actions
-function addEntry(){
-  var tit=f.value.tit.trim();
-  if(!tit){tost('请填写标题','err');return;}
-  var entityName=f.value.newEnt.trim()||f.value.entity;
-  if(!entityName){tost('请选择或输入发布主体','err');return;}
-  var newE={
-    id:'e'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
-    tit:tit,
-    typ:f.value.typ,
-    dt:f.value.dt||new Date().toISOString().slice(0,7),
-    entity:entityName,
-    aut:f.value.aut.trim(),
-    summ:f.value.summ.trim(),
-    url:f.value.url.trim()||'#',
-    kw:f.value.kw.trim(),
-    _cat:f.value.cat
-  };
-  data.value=data.value.concat([newE]);
-  f.value={cat:f.value.cat,entity:'',newEnt:'',typ:'paper',tit:'',aut:'',dt:'',summ:'',url:'',kw:''};
-  tost('✅ 已添加「'+tit+'」');
-}
-
-function rmEntry(id){
-  data.value=data.value.filter(function(e){return e.id!==id;});
-  tost('已删除');
-}
-
-function addEntity(){
-  var name=nEnt.value.trim();
-  if(!name)return;
-  var cat=nEntCat.value;
-  var existing=allD.value[cat]&&allD.value[cat][name];
-  if(existing){tost('「'+name+'」已存在','err');return;}
-  data.value=data.value.concat([{
-    id:'ent'+Date.now(),
-    tit:'[主体]'+name,typ:'paper',dt:'2025-01',entity:name,
-    aut:'',summ:'',url:'#',kw:'',_cat:cat,_ent:true
-  }]);
-  nEnt.value='';
-  tost('✅ 已添加「'+name+'」');
-}
-
-function rmEntity(cat,name){
-  data.value=data.value.filter(function(e){return !(e.entity===name&&e._cat===cat);});
-  tost('已删除「'+name+'」');
-}
-
-// LocalStorage
-function saveLS(){
-  try{localStorage.setItem('kkv2',JSON.stringify(data.value));}catch(e){}
-}
-function loadLS(){
-  try{
-    var d=localStorage.getItem('kkv2');
-    if(d)data.value=JSON.parse(d);
-  }catch(e){}
-}
-watch(data,function(){saveLS();},{deep:true});
-onMounted(function(){
-  tok.value=localStorage.getItem('kktok')||'';
-  lSync.value=localStorage.getItem('kklsync')||'';
-  loadLS();
-});
-
-// GitHub sync
-function saveTok(){
-  localStorage.setItem('kktok',tok.value);
-  tost('✅ Token已保存');
-}
-function b64en(s){
-  return btoa(encodeURIComponent(s).replace(/%([0-9A-F]{2})/g,function(_,p1){return String.fromCharCode(parseInt(p1,16));}));
-}
-function b64de(s){
-  return decodeURIComponent(Array.from(atob(s),function(c){return '%' + ('00' +c.charCodeAt(0).toString(16)).slice(-2);}).join(''));
-}
-var OWN='lileitaylor007-a11y';
-var REP='knowledge-radar';
-
-async function syncUp(){
-  if(!tok.value){tost('请先填入Token','err');return;}
-  sSt.value='run';sTxt.value='同步中…';
-  try{
-    var tk=tok.value;
-    var path='data.json';
-    var content=JSON.stringify({entries:data.value,updated:new Date().toISOString()},null,2);
-    var enc=b64en(content);
-    var sha=null;
-    try{
-      var r=await fetch('https://api.github.com/repos/'+OWN+'/'+REP+'/contents/'+path,{
-        headers:{'Authorization':'token '+tk,'Accept':'application/vnd.github.v3+json'}
-      });
-      if(r.ok){var d=await r.json();sha=d.sha;}
-      else if(r.status!==404)throw new Error('SHA获取失败:'+r.status);
-    }catch(e){}
-    var body={message:'sync: save data.json',content:enc};
-    if(sha)body.sha=sha;
-    var res=await fetch('https://api.github.com/repos/'+OWN+'/'+REP+'/contents/'+path,{
-      method:'PUT',
-      headers:{'Authorization':'token '+tk,'Content-Type':'application/vnd.github.v3+json'},
-      body:JSON.stringify(body)
-    });
-    if(!res.ok){
-      var err=await res.json().catch(function(){return{};});
-      throw new Error(err.message||'上传失败');
-    }
-    lSync.value=new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'});
-    localStorage.setItem('kklsync',lSync.value);
-    sSt.value='ok';sTxt.value='✅ 成功（'+data.value.length+'条）';
-    tost('☁️ 已同步'+data.value.length+'条到GitHub');
-  }catch(e){
-    sSt.value='err';sTxt.value='❌ '+e.message;
-    tost('同步失败:'+e.message,'err');
-  }
-  setTimeout(function(){sSt.value='idle';sTxt.value='';},4000);
-}
-
-async function syncDown(){
-  if(!tok.value){tost('请先填入Token','err');return;}
-  sSt.value='run';sTxt.value='加载中…';
-  try{
-    var tk=tok.value;
-    var r=await fetch('https://api.github.com/repos/'+OWN+'/'+REP+'/contents/data.json',{
-      headers:{'Authorization':'token '+tk}
-    });
-    if(r.status===404){throw new Error('GitHub上无data.json，请先同步');}
-    if(!r.ok)throw new Error('加载失败:'+r.status);
-    var d=await r.json();
-    if(!d.content)throw new Error('文件内容为空');
-    var text=b64de(d.content);
-    var parsed=JSON.parse(text);
-    if(!parsed.entries||!Array.isArray(parsed.entries))throw new Error('数据格式错误');
-    data.value=parsed.entries;
-    saveLS();
-    lSync.value=parsed.updated?new Date(parsed.updated).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}):'已加载';
-    sSt.value='ok';sTxt.value='✅ 已加载'+parsed.entries.length+'条';
-    tost('📥 已从GitHub加载'+parsed.entries.length+'条');
-  }catch(e){
-    sSt.value='err';sTxt.value='❌ '+e.message;
-    tost('加载失败:'+e.message,'err');
-  }
-  setTimeout(function(){sSt.value='idle';sTxt.value='';},4000);
-}
-
-// Tabs
-var tabs=[
-  {id:'companies',name:'🏢 公司'},
-  {id:'universities',name:'🏫 高校'},
-  {id:'authors',name:'👤 作者'},
-  {id:'edit',name:'✏️ 编辑'},
+const TABS = [
+  { id:'companies',   name:'🏢 公司' },
+  { id:'universities',name:'🏫 高校' },
+  { id:'authors',      name:'👤 作者' },
+  { id:'edit',         name:'✏️ 编辑' },
 ];
 
-Vue3.createApp({
-  setup:function(){
-    return{
-      data,curTab,typ,yr,q,modal,tok,sSt,sTxt,lSync,nEnt,nEntCat,
-      toastSh,toastMsg,toastTp,f,
-      tabs,grps,ents,ents2,
-      cols,rows,yrs,items,cell,
-      lbl,lbl2,addEntry,rmEntry,addEntity,rmEntity,
-      syncUp,syncDown,saveTok,
+// ===== HELPERS =====
+function toast(app, msg, tp) {
+  app.toastMsg.value = msg;
+  app.toastTp.value  = tp || 'ok';
+  app.toastSh.value  = true;
+  setTimeout(() => { app.toastSh.value = false; }, 2500);
+}
+
+function b64en(s) {
+  return btoa(encodeURIComponent(s).replace(/%([0-9A-F]{2})/g, (_,p1) => String.fromCharCode(parseInt(p1,16))));
+}
+function b64de(s) {
+  return decodeURIComponent(Array.from(atob(s), c => '%' + ('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+}
+
+const OWN = 'lileitaylor007-a11y';
+const REP = 'knowledge-radar';
+
+async function syncUp(app) {
+  if (!app.tok.value) { toast(app,'请先填入Token','err'); return; }
+  app.sSt.value='run'; app.sTxt.value='同步中…';
+  try {
+    const tk = app.tok.value;
+    const path = 'data.json';
+    const content = JSON.stringify({ entries: app.entries.value, updated: new Date().toISOString() }, null, 2);
+    const enc = b64en(content);
+    let sha = null;
+    try {
+      const r = await fetch(`https://api.github.com/repos/${OWN}/${REP}/contents/${path}`, {
+        headers:{'Authorization':'token '+tk,'Accept':'application/vnd.github.v3+json'}
+      });
+      if (r.ok) { const d = await r.json(); sha = d.sha; }
+      else if (r.status !== 404) throw new Error('SHA获取失败:'+r.status);
+    } catch(e) {}
+    const body = { message:'sync: save data.json', content:enc };
+    if (sha) body.sha = sha;
+    const res = await fetch(`https://api.github.com/repos/${OWN}/${REP}/contents/${path}`, {
+      method:'PUT', headers:{'Authorization':'token '+tk,'Content-Type':'application/vnd.github.v3+json'}, body:JSON.stringify(body)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>{});
+      throw new Error(err.message||'上传失败');
+    }
+    app.lSync.value = new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'});
+    localStorage.setItem('kklsync', app.lSync.value);
+    app.sSt.value='ok'; app.sTxt.value='✅ 成功（'+app.entries.value.length+'条）';
+    toast(app,'☁️ 已同步'+app.entries.value.length+'条到GitHub');
+  } catch(e) {
+    app.sSt.value='err'; app.sTxt.value='❌ '+e.message;
+    toast(app,'同步失败:'+e.message,'err');
+  }
+  setTimeout(()=>{ app.sSt.value='idle'; app.sTxt.value=''; }, 4000);
+}
+
+async function syncDown(app) {
+  if (!app.tok.value) { toast(app,'请先填入Token','err'); return; }
+  app.sSt.value='run'; app.sTxt.value='加载中…';
+  try {
+    const tk = app.tok.value;
+    const r = await fetch(`https://api.github.com/repos/${OWN}/${REP}/contents/data.json`, {
+      headers:{'Authorization':'token '+tk}
+    });
+    if (r.status===404) throw new Error('GitHub上无data.json，请先同步');
+    if (!r.ok) throw new Error('加载失败:'+r.status);
+    const d = await r.json();
+    if (!d.content) throw new Error('文件内容为空');
+    const text = b64de(d.content);
+    const parsed = JSON.parse(text);
+    if (!parsed.entries||!Array.isArray(parsed.entries)) throw new Error('数据格式错误');
+    app.entries.value = parsed.entries;
+    saveLS(app);
+    app.lSync.value = parsed.updated ? new Date(parsed.updated).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}) : '已加载';
+    app.sSt.value='ok'; app.sTxt.value='✅ 已加载'+parsed.entries.length+'条';
+    toast(app,'📥 已从GitHub加载'+parsed.entries.length+'条');
+  } catch(e) {
+    app.sSt.value='err'; app.sTxt.value='❌ '+e.message;
+    toast(app,'加载失败:'+e.message,'err');
+  }
+  setTimeout(()=>{ app.sSt.value='idle'; app.sTxt.value=''; }, 4000);
+}
+
+function saveLS(app) {
+  try { localStorage.setItem('kkv2', JSON.stringify(app.entries.value)); } catch(e) {}
+}
+function loadLS(app) {
+  try {
+    const d = localStorage.getItem('kkv2');
+    if (d) app.entries.value = JSON.parse(d);
+  } catch(e) {}
+}
+
+// ===== APP =====
+createApp({
+  setup() {
+    const tabs       = ref(TABS);
+    const curTab     = ref('companies');
+    const typ        = ref('all');
+    const yr         = ref('all');
+    const q          = ref('');
+    const modal      = ref(null);
+    const tok        = ref('');
+    const sSt        = ref('idle');
+    const sTxt       = ref('');
+    const lSync      = ref('');
+    const nEnt       = ref('');
+    const nEntCat    = ref('companies');
+    const toastSh    = ref(false);
+    const toastMsg   = ref('');
+    const toastTp    = ref('ok');
+    const entries    = ref([]);
+
+    const f = ref({ cat:'companies', entity:'', newEnt:'', typ:'paper', tit:'', aut:'', dt:'', summ:'', url:'', kw:'' });
+
+    function switchTab(id) {
+      curTab.value = id;
+      yr.value = 'all';
+      q.value = '';
+    }
+
+    // All data: {companies:{华为:[...],...},universities:{...},authors:{...}}
+    const allD = computed(() => {
+      const r = {};
+      for (const cat in SEED) {
+        r[cat] = {};
+        for (const n in SEED[cat]) r[cat][n] = [...SEED[cat][n]];
+      }
+      for (const e of entries.value) {
+        if (!e._cat) continue;
+        const cat = e._cat;
+        if (!r[cat]) r[cat] = {};
+        if (!r[cat][e.entity]) r[cat][e.entity] = [];
+        if (!r[cat][e.entity].find(x => x.id === e.id)) {
+          r[cat][e.entity].push(e);
+        }
+      }
+      return r;
+    });
+
+    // Filtered items for current tab
+    const items = computed(() => {
+      if (curTab.value === 'edit') return [];
+      const cat = curTab.value;
+      const src = allD.value[cat] || {};
+      let list = [];
+      for (const entity in src) {
+        for (const it of src[entity]) {
+          list.push({ ...it, entity });
+        }
+      }
+      return list.filter(it => {
+        if (typ.value !== 'all' && it.typ !== typ.value) return false;
+        if (yr.value !== 'all' && (!it.dt || !it.dt.startsWith(yr.value))) return false;
+        if (q.value) {
+          const qq = q.value.toLowerCase();
+          if (!it.tit.toLowerCase().includes(qq) &&
+              !(it.aut||'').toLowerCase().includes(qq) &&
+              !(it.kw||'').toLowerCase().includes(qq)) return false;
+        }
+        return true;
+      });
+    });
+
+    const cols = computed(() => {
+      const seen = {};
+      for (const it of items.value) seen[it.entity] = true;
+      return Object.keys(seen).sort();
+    });
+
+    const rows = computed(() => {
+      const months = {};
+      for (const it of items.value) {
+        if (it.dt) months[it.dt.slice(0,7)] = true;
+      }
+      return Object.keys(months).sort().reverse();
+    });
+
+    const yrs = computed(() => {
+      if (curTab.value === 'edit') return [];
+      const cat = curTab.value;
+      const src = allD.value[cat] || {};
+      const yset = {};
+      for (const entity in src) {
+        for (const it of src[entity]) {
+          if (it.dt) yset[it.dt.slice(0,4)] = true;
+        }
+      }
+      return Object.keys(yset).sort().reverse();
+    });
+
+    function cell(month, entity) {
+      return items.value.filter(it => it.dt && it.dt.startsWith(month) && it.entity === entity);
+    }
+
+    // Entity groups with counts
+    const grps = computed(() => {
+      const r = {};
+      for (const cat in SEED) {
+        r[cat] = {};
+        for (const n in SEED[cat]) r[cat][n] = SEED[cat][n].length;
+      }
+      for (const e of entries.value) {
+        if (!e._cat) continue;
+        const cat = e._cat;
+        if (!r[cat]) r[cat] = {};
+        r[cat][e.entity] = (r[cat][e.entity] || 0) + 1;
+      }
+      return r;
+    });
+
+    function countCat(cat) {
+      return Object.keys(grps.value[cat] || {}).length;
+    }
+
+    function labelCat(c) { return {companies:'🏢公司',universities:'🏫高校',authors:'👤作者'}[c]||c; }
+    function labelTyp(t) { return {paper:'📄论文',patent:'📜专利',whitepaper:'📘白皮书'}[t]||t; }
+    function dotColor(t) { return {paper:'#4f9cff',patent:'#f0a04b',whitepaper:'#4fd6a8'}[t]||'#888'; }
+
+    const entityOptions = computed(() => {
+      const cat = f.value.cat;
+      return Object.keys(allD.value[cat] || {}).sort();
+    });
+
+    const recentEntries = computed(() => entries.value.slice().reverse().slice(0,20));
+
+    function openModal(it) { modal.value = it; }
+
+    function addEntry() {
+      const tit = f.value.tit.trim();
+      if (!tit) { toast({toastSh,toastMsg,toastTp},'请填写标题','err'); return; }
+      const entityName = f.value.newEnt.trim() || f.value.entity;
+      if (!entityName) { toast({toastSh,toastMsg,toastTp},'请选择或输入发布主体','err'); return; }
+      const newE = {
+        id: 'e'+Date.now()+'_'+Math.random().toString(36).slice(2,6),
+        tit, typ: f.value.typ,
+        dt: f.value.dt || new Date().toISOString().slice(0,7),
+        entity: entityName,
+        aut: f.value.aut.trim(), summ: f.value.summ.trim(),
+        url: f.value.url.trim() || '#', kw: f.value.kw.trim(),
+        _cat: f.value.cat
+      };
+      entries.value = [...entries.value, newE];
+      f.value = { cat:f.value.cat, entity:'', newEnt:'', typ:'paper', tit:'', aut:'', dt:'', summ:'', url:'', kw:'' };
+      toast({toastSh,toastMsg,toastTp},'✅ 已添加「'+tit+'」');
+    }
+
+    function rmEntry(id) {
+      entries.value = entries.value.filter(e => e.id !== id);
+      toast({toastSh,toastMsg,toastTp},'已删除');
+    }
+
+    function addEntity() {
+      const name = nEnt.value.trim();
+      if (!name) return;
+      const cat = nEntCat.value;
+      const existing = allD.value[cat] && allD.value[cat][name];
+      if (existing) { toast({toastSh,toastMsg,toastTp},'「'+name+'」已存在','err'); return; }
+      entries.value = [...entries.value, {
+        id:'ent'+Date.now(), tit:'[主体]'+name, typ:'paper', dt:'2025-01', entity:name,
+        aut:'', summ:'', url:'#', kw:'', _cat:cat, _ent:true
+      }];
+      nEnt.value = '';
+      toast({toastSh,toastMsg,toastTp},'✅ 已添加「'+name+'」');
+    }
+
+    function rmEntity(cat, name) {
+      entries.value = entries.value.filter(e => !(e.entity === name && e._cat === cat));
+      toast({toastSh,toastMsg,toastTp},'已删除「'+name+'」');
+    }
+
+    function resetForm() {
+      f.value = { cat:f.value.cat, entity:'', newEnt:'', typ:'paper', tit:'', aut:'', dt:'', summ:'', url:'', kw:'' };
+    }
+
+    function saveTok() {
+      localStorage.setItem('kktok', tok.value);
+      toast({toastSh,toastMsg,toastTp},'✅ Token已保存');
+    }
+
+    watch(entries, () => saveLS({ entries }), { deep: true });
+
+    onMounted(() => {
+      tok.value  = localStorage.getItem('kktok') || '';
+      lSync.value = localStorage.getItem('kklsync') || '';
+      loadLS({ entries });
+    });
+
+    return {
+      tabs, curTab, switchTab,
+      typ, yr, q,
+      entries, recentEntries,
+      items, cols, rows, yrs, cell,
+      grps, countCat, labelCat, labelTyp, dotColor,
+      entityOptions,
+      f, nEnt, nEntCat,
+      modal, openModal,
+      tok, saveTok, syncUp, syncDown, sSt, sTxt, lSync,
+      addEntry, rmEntry, addEntity, rmEntity, resetForm,
+      toastSh, toastMsg, toastTp,
     };
   }
 }).mount('#app');
-})();
 </script>
 </body>
 </html>
