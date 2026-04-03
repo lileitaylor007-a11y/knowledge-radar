@@ -17,6 +17,14 @@ body.light{
   --text:#1a1d27;--text-dim:#6b7085;
   --surface-hover:#dddce5;
 }
+.bg-wukong{background-image:url('https://raw.githubusercontent.com/lileitaylor007-a11y/knowledge-radar/main/wukong.png');background-size:cover;background-position:center;background-attachment:fixed}
+.bg-nezha{background-image:url('https://raw.githubusercontent.com/lileitaylor007-a11y/knowledge-radar/main/nezha.png');background-size:cover;background-position:center;background-attachment:fixed}
+.bg-naruto{background-image:url('https://raw.githubusercontent.com/lileitaylor007-a11y/knowledge-radar/main/naruto.png');background-size:cover;background-position:center;background-attachment:fixed}
+body.bg-wukong,body.bg-nezha,body.bg-naruto{background-color:#0a0a0f}
+body.light.bg-wukong,body.light.bg-nezha,body.light.bg-naruto{background-color:#1a1a2e}
+body.bg-wukong::before,body.bg-nezha::before,body.bg-naruto::before{content:'';position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:0;pointer-events:none}
+body.light.bg-wukong::before,body.light.bg-nezha::before,body.light.bg-naruto::before{background:rgba(0,0,0,0.15)}
+body.light.bg-wukong>*,body.light.bg-nezha>*,body.light.bg-naruto>*{position:relative;z-index:1}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
@@ -170,7 +178,13 @@ select{cursor:pointer}
       :class="{active:curTab===t.id}"
       @click="switchTab(t.id)">{{ t.name }}</button>
   </div>
-  <button @click="toggleTheme" :title="isLight?'切换到暗色':'切换到亮色'" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:1.1rem;padding:4px 8px;border-radius:6px;color:var(--text-dim)">{{ isLight ? '🌙' : '☀️' }}</button>
+  <button @click="toggleTheme" :title="isLight?'切换到暗色':'切换到亮色'" style="background:none;border:none;cursor:pointer;font-size:1.1rem;padding:4px 8px;border-radius:6px;color:var(--text-dim)">{{ isLight ? '🌙' : '☀️' }}</button>
+<select v-model="bgTheme" @change="applyBgTheme" style="background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:3px 8px;font-size:0.75rem;outline:none">
+  <option value="none">无背景</option>
+  <option value="wukong">🖤 黑悟空</option>
+  <option value="nezha">🔥 哪吒</option>
+  <option value="naruto">🍥 鸣人</option>
+</select>
 </header>
 
 <!-- ===== MATRIX VIEW ===== -->
@@ -800,6 +814,15 @@ createApp({
       localStorage.setItem('kktheme', isLight.value ? 'light' : 'dark');
     }
 
+    const bgTheme = ref(localStorage.getItem('kkbg') || 'none');
+    ['wukong','nezha','naruto'].forEach(b => document.body.classList.remove('bg-'+b));
+    if (bgTheme.value !== 'none') document.body.classList.add('bg-'+bgTheme.value);
+    function applyBgTheme() {
+      ['wukong','nezha','naruto'].forEach(b => document.body.classList.remove('bg-'+b));
+      if (bgTheme.value !== 'none') document.body.classList.add('bg-'+bgTheme.value);
+      localStorage.setItem('kkbg', bgTheme.value);
+    }
+
     const entityOptions = computed(() => {
       return Object.keys(allD.value[f.value.cat] || {}).sort();
     });
@@ -891,6 +914,7 @@ createApp({
       typ, yr, q,
       entries, recentEntries, entriesByCat, collapsedCats, collapsedEntities,
       isLight, toggleTheme,
+      bgTheme, applyBgTheme,
       items, cols, rows, yrs, cell,
       grps, countCat, labelCat, labelTyp, dotColor,
       entityOptions, allEntityOptions,
