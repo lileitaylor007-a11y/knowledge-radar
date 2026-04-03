@@ -208,8 +208,7 @@ select{cursor:pointer}
                 :title="it.tit"
                 @click="openModal(it)">
                 <span class="tdot"></span>
-                <a v-if="it.url && it.url!='#'" :href="it.url" target="_blank" class="hl" @click.stop>{{ it.tit }}</a>
-                <span v-else class="ttl">{{ it.tit }}</span>
+                <span class="ttl">{{ it.tit }}</span>
               </div>
               <div v-if="!cell(r,c).length" class="cell-empty">—</div>
             </div>
