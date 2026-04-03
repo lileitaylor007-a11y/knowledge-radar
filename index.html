@@ -319,19 +319,27 @@ select{cursor:pointer}
       <button class="btn btn-pri" @click="addEntity" :disabled="!nEnt.trim()">✅ 添加主体</button>
     </div>
 
-    <div v-for="(names,cat) in grps" :key="cat" style="margin-top:1rem">
-      <div class="cat-hdr">{{ labelCat(cat) }} ({{ countCat(cat) }})</div>
-      <div class="entity-list">
-        <div v-for="(cnt,name) in names" :key="name" class="entity-item">
-          <div>
-            <div class="nm">{{ name }}</div>
-            <div class="ct">{{ cnt }}条记录</div>
-          </div>
-          <div class="ac">
-            <button class="btn-sm btn-sm-del" @click="rmEntity(cat,name)">删除</button>
-          </div>
+    <div v-for="cat in ['companies','universities','authors']" :key="cat" class="collapsible" :class="{collapsed: collapsedEntities[cat]}" style="margin-top:0.5rem">
+      <div class="collapsible-header" @click="collapsedEntities[cat]=!collapsedEntities[cat]">
+        <div class="left">
+          <span>{{ labelCat(cat) }}</span>
+          <span style="font-size:0.75rem;color:var(--text-dim);font-weight:400">({{ countCat(cat) }}个主体)</span>
         </div>
-        <div v-if="!countCat(cat)" style="color:var(--text-dim);font-size:0.78rem;text-align:center;padding:0.5rem 0">暂无</div>
+        <span class="arrow">▼</span>
+      </div>
+      <div class="collapsible-body">
+        <div class="entity-list">
+          <div v-for="(cnt,name) in (grps[cat]||{})" :key="name" class="entity-item">
+            <div>
+              <div class="nm">{{ name }}</div>
+              <div class="ct">{{ cnt }}条记录</div>
+            </div>
+            <div class="ac">
+              <button class="btn-sm btn-sm-del" @click="rmEntity(cat,name)">删除</button>
+            </div>
+          </div>
+          <div v-if="!countCat(cat)" style="color:var(--text-dim);font-size:0.78rem;text-align:center;padding:0.5rem 0">暂无主体</div>
+        </div>
       </div>
     </div>
   </div>
@@ -783,6 +791,7 @@ createApp({
 
     const recentEntries = computed(() => entries.value.slice().reverse().slice(0,20));
     const collapsedCats = reactive({companies:true, universities:true, authors:true});
+    const collapsedEntities = reactive({companies:false, universities:false, authors:false});
     const entriesByCat = (cat) => entries.value.filter(e => e._cat === cat).reverse();
 
     function openModal(it) { modal.value = it; }
@@ -861,7 +870,7 @@ createApp({
     return {
       tabs, curTab, switchTab,
       typ, yr, q,
-      entries, recentEntries, entriesByCat, collapsedCats,
+      entries, recentEntries, entriesByCat, collapsedCats, collapsedEntities,
       items, cols, rows, yrs, cell,
       grps, countCat, labelCat, labelTyp, dotColor,
       entityOptions, allEntityOptions,
