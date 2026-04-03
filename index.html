@@ -134,6 +134,16 @@ select{cursor:pointer}
 .toast.err{border-color:var(--danger);color:var(--danger)}
 .toast.info{border-color:var(--accent);color:var(--accent)}
 
+/* Collapsible */
+.collapsible{margin-bottom:0.75rem}
+.collapsible-header{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:border .15s}
+.collapsible-header:hover{border-color:var(--accent)}
+.collapsible-header .left{display:flex;align-items:center;gap:0.6rem;font-size:0.88rem;font-weight:600}
+.collapsible-header .arrow{color:var(--text-dim);font-size:0.8rem;transition:transform .2s}
+.collapsible-body{padding:0.5rem 0 0 0;display:block;overflow:hidden}
+.collapsed .collapsible-body{display:none}
+.collapsed .arrow{transform:rotate(-90deg)}
+
 /* Scrollbar */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -388,19 +398,28 @@ select{cursor:pointer}
     </div>
   </div>
 
-  <!-- Entry list -->
+  <!-- Entry list (collapsible, grouped by category) -->
   <div class="edit-section" v-if="entries.length">
     <h2>📋 已添加的条目（共 {{ entries.length }} 条）</h2>
-    <div class="entity-list">
-      <div v-for="e in recentEntries" :key="e.id" class="entry-row">
-        <div class="tdot" :style="{background: dotColor(e.typ)}"></div>
-        <div class="info">
-          <div class="ttl">{{ e.tit }}</div>
-          <div class="meta">{{ e.entity }} · {{ e.dt }} · {{ labelTyp(e.typ) }}</div>
+    <div v-for="cat in ['companies','universities','authors']" :key="cat" class="collapsible" :class="{collapsed: collapsedCats[cat]}">
+      <div class="collapsible-header" @click="collapsedCats[cat]=!collapsedCats[cat]">
+        <div class="left">
+          <span>{{ labelCat(cat) }}</span>
+          <span style="font-size:0.75rem;color:var(--text-dim);font-weight:400">({{ entriesByCat(cat).length }}条)</span>
         </div>
-        <button class="btn-sm btn-sm-del" @click="rmEntry(e.id)">删除</button>
+        <span class="arrow">▼</span>
       </div>
-      <div v-if="entries.length>20" style="font-size:0.78rem;color:var(--text-dim);text-align:center;margin-top:0.5rem">显示最近20条，共{{ entries.length }}条</div>
+      <div class="collapsible-body">
+        <div v-for="e in entriesByCat(cat)" :key="e.id" class="entry-row">
+          <div class="tdot" :style="{background: dotColor(e.typ)}"></div>
+          <div class="info">
+            <div class="ttl">{{ e.tit }}</div>
+            <div class="meta">{{ e.entity }} · {{ e.dt }} · {{ labelTyp(e.typ) }}</div>
+          </div>
+          <button class="btn-sm btn-sm-del" @click="rmEntry(e.id)">删除</button>
+        </div>
+        <div v-if="!entriesByCat(cat).length" style="color:var(--text-dim);font-size:0.78rem;text-align:center;padding:0.5rem 0">暂无条目</div>
+      </div>
     </div>
   </div>
 
@@ -437,7 +456,7 @@ select{cursor:pointer}
 </div><!-- end #app -->
 
 <script>
-const { createApp, ref, computed, watch, onMounted } = Vue;
+const { createApp, ref, computed, reactive, watch, onMounted } = Vue;
 
 const OWN = 'lileitaylor007-a11y';
 const REP = 'knowledge-radar';
@@ -763,6 +782,8 @@ createApp({
     });
 
     const recentEntries = computed(() => entries.value.slice().reverse().slice(0,20));
+    const collapsedCats = reactive({companies:true, universities:true, authors:true});
+    const entriesByCat = (cat) => entries.value.filter(e => e._cat === cat).reverse();
 
     function openModal(it) { modal.value = it; }
 
@@ -840,7 +861,7 @@ createApp({
     return {
       tabs, curTab, switchTab,
       typ, yr, q,
-      entries, recentEntries,
+      entries, recentEntries, entriesByCat, collapsedCats,
       items, cols, rows, yrs, cell,
       grps, countCat, labelCat, labelTyp, dotColor,
       entityOptions, allEntityOptions,
