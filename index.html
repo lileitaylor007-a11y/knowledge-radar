@@ -598,6 +598,30 @@ function loadLS(app) {
     if (d) app.entries.value = JSON.parse(d);
   } catch(e) {}
 }
+function saveEntities(app) {
+  try {
+    const cats = {};
+    for (const e of app.entries.value) {
+      if (!e._ent || !e._cat) continue;
+      if (!cats[e._cat]) cats[e._cat] = [];
+      if (!cats[e._cat].includes(e.entity)) cats[e._cat].push(e.entity);
+    }
+    localStorage.setItem('kkentities', JSON.stringify(cats));
+  } catch(e) {}
+}
+function loadEntities() {
+  try {
+    const raw = localStorage.getItem('kkentities');
+    if (!raw) return {};
+    const cats = JSON.parse(raw);
+    const result = {};
+    for (const cat in cats) {
+      result[cat] = {};
+      for (const name of cats[cat]) result[cat][name] = [];
+    }
+    return result;
+  } catch(e) { return {}; }
+}
 
 createApp({
   setup() {
@@ -642,6 +666,12 @@ createApp({
       for (const cat in SEED) {
         r[cat] = {};
         for (const n in SEED[cat]) r[cat][n] = [...SEED[cat][n]];
+      }
+      // Merge user entities from localStorage (ensures they survive even if entries fail to load)
+      const userEnts = loadEntities();
+      for (const cat in userEnts) {
+        if (!r[cat]) r[cat] = {};
+        for (const n in userEnts[cat]) { if (!r[cat][n]) r[cat][n] = []; }
       }
       for (const e of entries.value) {
         if (!e._cat) continue;
@@ -767,11 +797,14 @@ createApp({
         aut:'', summ:'', url:'#', kw:'', _cat:cat, _ent:true
       }];
       nEnt.value = '';
+      // Persist entity list separately
+      saveEntities({ entries });
       toast({toastSh,toastMsg,toastTp},'✅ 已添加「'+name+'」');
     }
 
     function rmEntity(cat, name) {
       entries.value = entries.value.filter(e => !(e.entity === name && e._cat === cat));
+      saveEntities({ entries });
       toast({toastSh,toastMsg,toastTp},'已删除「'+name+'」');
     }
 
