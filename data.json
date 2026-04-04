@@ -259,7 +259,72 @@
       "kw": "动态规划,能量优化,自适应控制,PHEV",
       "_cat": "companies",
       "cites": ""
+    },
+    {
+      "id": "li_auto_wp01",
+      "tit": "理想汽车与中车时代半导体签署战略授权协议，合作开发全新一代增程专用功率模块",
+      "typ": "whitepaper",
+      "dt": "2025-06",
+      "entity": "理想汽车",
+      "aut": "车pe360 / 理想汽车官方",
+      "summ": "理想汽车与中车时代半导体合作开发XPM二合一功率模块，可适配800V高压平台至400V常规平台，专为增程混合动力系统优化，预计2026年量产，预计占增程式电驱动功率模块市场份额超40%。",
+      "url": "https://www.cmpe360.com/p/275480",
+      "kw": "理想,中车时代,功率模块,XPM,增程,混动",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "li_auto_wp02",
+      "tit": "理想i8高压SiC电驱动系统斩获[中国心]2025年度十佳新能源动力系统",
+      "typ": "whitepaper",
+      "dt": "2025-11",
+      "entity": "理想汽车",
+      "aut": "IT之家 / 芯智讯",
+      "summ": "理想i8搭载自研高压SiC电驱动系统入选[中国心]年度十佳，系统采用理想自研SiC功率模块，在能效、集成度及全栈自研技术方面实现突破，综合功率达400kW（前后155kW+245kW），支持5C超充。",
+      "url": "https://www.ithome.com/0/916/529.htm",
+      "kw": "理想i8,SiC,电驱动,[中国心],十佳,800V",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "li_auto_paper01",
+      "tit": "理想汽车自研高压碳化硅功率模块LPM技术解析",
+      "typ": "whitepaper",
+      "dt": "2025-07",
+      "entity": "理想汽车",
+      "aut": "电子工程专辑 / 行家说三代半",
+      "summ": "理想历时3年半完成自研SiC模块从设计到量产：采用无外露功率端子+内部开窗设计，Y方向尺寸减少40mm；系统隐性摩擦力降至约10nH（降低50%）；相对IGBT续航增加6%（约40km），关键技术组合再提升1%（约7km）。",
+      "url": "https://www.eet-china.com/mp/a414193.html",
+      "kw": "SiC,LPM,无端子,AMB,续航增加,800V",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "li_auto_news01",
+      "tit": "理想汽车自研SiC功率模块开始量产——苏州+常州双基地",
+      "typ": "whitepaper",
+      "dt": "2025-02",
+      "entity": "理想汽车",
+      "aut": "CnEVpost 电车汇",
+      "summ": "理想自研SiC功率芯片及下一代电驱动总成在苏州半导体基地（SiC芯片）和常州电驱动基地（总成）同步量产，将搭载于2025年推出的多款BEV车型。核心三大技术：自研SiC功率芯片+新一代电驱动总成+800V高压平台。",
+      "url": "https://cnevpost.com/2025/02/13/li-auto-production-sic-modules/",
+      "kw": "SiC,量产,苏州,常州,BEV,800V",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "li_auto_paper02",
+      "tit": "SiC MOSFETs: The Inevitable Trend for 800V Electric Vehicle",
+      "typ": "paper",
+      "dt": "2025-03",
+      "entity": "理想汽车",
+      "aut": "IEEE Xplore",
+      "summ": "IEEE论文研究SiC MOSFET在800V电动车中的应用趋势，以理想i8为案例：采用SiC功率模块相对IGBT续航提升6%（约40km），配合系统优化再提升1%（约7km）。研究指出SiC MOSFET是800V电动车的必然趋势。",
+      "url": "https://ieeexplore.ieee.org/iel8/25/10887097/10690262.pdf",
+      "kw": "SiC MOSFET,800V,续航提升,理想i8,电驱动",
+      "_cat": "companies",
+      "cites": ""
     }
   ],
-  "updated": "2026-04-03T18:20:00+08:00"
+  "updated": "2026-04-04T13:22:00+08:00"
 }
