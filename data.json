@@ -441,7 +441,33 @@
       "kw": "SiC,GaN,光伏逆变器,智能光伏,开关损耗",
       "_cat": "companies",
       "cites": ""
+    },
+    {
+      "id": "arxiv_sic_inv_paper01",
+      "tit": "Active Short Circuit and Safe Discharge Mechanisms in Multi-Phase Inverters During Critical Failures",
+      "typ": "paper",
+      "dt": "2025-11",
+      "entity": "SiC多相逆变器研究",
+      "aut": "arXiv / Siddhesh Pimpale, Sagar Mahadik",
+      "summ": "多相逆变器（EV动力总成）主动短路检测+安全放电机制，防止故障扩散到整流其他相。核心：on-chip主动短路机制实现故障相隔离+受控放电降低热应力；实验证明故障检测响应优于现有方法。针对SiC功率模块在EV应用中的安全性设计。",
+      "url": "https://arxiv.org/abs/2511.08405",
+      "kw": "SiC,多相逆变器,主动短路,安全放电,EV,故障保护",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "arxiv_gan_inv_paper01",
+      "tit": "Power Loss Modelling of GaN HEMT based 3L ANPC Three Phase Inverter for different PWM Techniques",
+      "typ": "paper",
+      "dt": "2022-12",
+      "entity": "GaN逆变器损耗建模研究",
+      "aut": "arXiv / M. Cacciato, G. Aiello et al. (IEEE EPE 2022, GaN4AP项目)",
+      "summ": "GaN HEMT三电平ANPC逆变器（3L ANPC）的解析损耗建模；对比不同载波PWM策略下的导通损耗+开关损耗分布。基于IEEE EPE 2022会议论文，ECSEL-JU GaN4AP项目支持。",
+      "url": "https://arxiv.org/abs/2212.05246",
+      "kw": "GaN HEMT,三电平ANPC,损耗建模,PWM策略,开关损耗,导通损耗",
+      "_cat": "companies",
+      "cites": ""
     }
   ],
-  "updated": "2026-04-04T23:07:35+08:00"
+  "updated": "2026-04-10T21:45:00+08:00"
 }
