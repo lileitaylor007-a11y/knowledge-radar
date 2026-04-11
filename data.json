@@ -467,7 +467,72 @@
       "kw": "GaN HEMT,三电平ANPC,损耗建模,PWM策略,开关损耗,导通损耗",
       "_cat": "companies",
       "cites": ""
+    },
+    {
+      "id": "igbt_loss_paper01",
+      "tit": "大功率密度IGBT模块损耗计算与系统分析",
+      "typ": "paper",
+      "dt": "2026-03",
+      "entity": "Electronics",
+      "aut": "MDPI",
+      "summ": "IGBT模块损耗计算与系统分析，适用于电机控制器硬件热设计验证。覆盖开关损耗、导通损耗建模方法。",
+      "url": "https://www.mdpi.com/1996-1073/18/4/997",
+      "kw": "IGBT,损耗计算,热设计,电机控制器,功率模块",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "sic_nn_paper01",
+      "tit": "基于神经网络的SiC MOSFET器件性能预测",
+      "typ": "paper",
+      "dt": "2026-01",
+      "entity": "SiC-Research",
+      "aut": "MDPI",
+      "summ": "AI+功率半导体：用神经网络预测SiC器件行为，为器件模型和可靠性评估提供新方法。",
+      "url": "https://www.mdpi.com/2072-666X/16/1/55",
+      "kw": "SiC MOSFET,神经网络,器件预测,可靠性,建模",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "rohm_sic_wp01",
+      "tit": "ROHM SiC MOSFET可靠性难题攻克",
+      "typ": "whitepaper",
+      "dt": "2026-03",
+      "entity": "ROHM",
+      "aut": "ROHM",
+      "summ": "栅氧层失效机制+新封装技术，系统梳理高温/高频/高功率密度场景下的工程约束。",
+      "url": "https://rohm.eefocus.com/article/id-4663",
+      "kw": "SiC MOSFET,可靠性,栅氧层,失效机制,封装技术",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "onsemi_sic_wp01",
+      "tit": "onsemi EliteSiC M3e：传导损耗-30%，逆变器功率+20%",
+      "typ": "whitepaper",
+      "dt": "2025-02",
+      "entity": "onsemi",
+      "aut": "onsemi",
+      "summ": "onsemi推出新一代1200V SiC MOSFET平台EliteSiC M3e，传导损耗降低30%，逆变器功率提升20%。",
+      "url": "https://finance.sina.com.cn/tech/roll/2025-02-20/doc-inemcark4774625.shtml",
+      "kw": "SiC MOSFET,EliteSiC M3e,onsemi,逆变器,功率密度",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "gtc_huawei_wp01",
+      "tit": "广汽丰田铂智7全系搭载华为DriveONE",
+      "typ": "whitepaper",
+      "dt": "2026-04",
+      "entity": "Huawei",
+      "aut": "163.com",
+      "summ": "丰田首次大规模采用中国厂商电驱方案，华为正式进入日系供应链。广汽丰田铂智7全系搭载华为DriveONE。",
+      "url": "https://www.163.com/dy/article/J7MOC90O05568D7G.html",
+      "kw": "华为DriveONE,广汽丰田,电驱动,供应链,日系",
+      "_cat": "companies",
+      "cites": ""
     }
   ],
-  "updated": "2026-04-10T21:45:00+08:00"
+  "updated": "2026-04-11T09:17:00+08:00"
 }
