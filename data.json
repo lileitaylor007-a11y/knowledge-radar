@@ -532,7 +532,33 @@
       "kw": "华为DriveONE,广汽丰田,电驱动,供应链,日系",
       "_cat": "companies",
       "cites": ""
+    },
+    {
+      "id": "dana_asc_sdf_paper01",
+      "tit": "Active Short Circuit and Safe Discharge Mechanisms in Multi-Phase Inverters During Critical Failures",
+      "typ": "paper",
+      "dt": "2025-11",
+      "entity": "Dana Inc",
+      "aut": "Siddhesh Pimpale, Sagar Mahadik (Dana Inc, USA)",
+      "summ": "多相逆变器主动短路(ASC)与安全放电(SDF)故障保护机制研究。提出集中式短路检测(5.8μs响应)+主动短路相隔离+混合放电方案，实验证明系统性能提升2.45×，故障检测时间减少2.11×，热应力降低2.25×。直接适用于EV电机控制器硬件保护电路设计参考。",
+      "url": "https://arxiv.org/abs/2511.08405",
+      "kw": "SiC,多相逆变器,主动短路,安全放电,故障保护,EV,电机控制器",
+      "_cat": "companies",
+      "cites": ""
+    },
+    {
+      "id": "univ_stuttgart_bev_paper01",
+      "tit": "A Data-Based Review of Battery Electric Vehicle and Traction Inverter Trends",
+      "typ": "paper",
+      "dt": "2025-08",
+      "entity": "斯图加特大学/埃斯林根应用技术大学",
+      "aut": "Christoph Sachs (Univ. Stuttgart), Martin Neuburger (Esslingen Univ.)",
+      "summ": "基于1000+欧洲BEV车型数据集(2010-2025)的数据驱动综述。核心发现：①WLTP续航从135km升至455km，但能耗基本持平②SiC渗透率自2021年加速(~50%新车型)③3L-TNPC SiC方案仅需+30%芯片面积，可节省€234电池成本(500km车型)④GaN接近800V automotive牵引应用。IECON 2025论文。",
+      "url": "https://arxiv.org/abs/2508.14224",
+      "kw": "BEV,牵引逆变器,SiC,3L-TNPC,数据驱动,WLTP,功率密度,成本分析",
+      "_cat": "companies",
+      "cites": ""
     }
   ],
-  "updated": "2026-04-11T09:17:00+08:00"
+  "updated": "2026-04-15T12:10:00+08:00"
 }
