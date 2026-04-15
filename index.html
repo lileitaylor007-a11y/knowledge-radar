@@ -50,8 +50,19 @@ select{cursor:pointer}
 .dot.paper{background:var(--paper)}.dot.patent{background:var(--patent)}.dot.whitepaper{background:var(--whitepaper)}
 
 /* Matrix */
-.matrix-wrap{padding:1.5rem 2rem 2rem;overflow-x:auto}
-.matrix{border-collapse:separate;border-spacing:3px;min-width:100%}
+.matrix-wrap{padding:1.5rem 2rem 2rem;overflow:visible}
+.matrix{display:flex;flex-direction:column}
+.matrix-hdr-inner{display:flex;overflow-x:scroll;overflow-y:hidden;scrollbar-width:thin}
+.matrix-body-inner{display:flex;flex-direction:column;overflow:auto;max-height:75vh;scrollbar-width:thin}
+.matrix-hdr-inner::-webkit-scrollbar,.matrix-body-inner::-webkit-scrollbar{height:8px}
+.matrix-hdr-inner::-webkit-scrollbar-track,.matrix-body-inner::-webkit-scrollbar-track{background:transparent}
+.matrix-hdr-inner::-webkit-scrollbar-thumb,.matrix-body-inner::-webkit-scrollbar-thumb{background:var(--border,#444);border-radius:4px}
+.mh-row{display:flex;flex-direction:row;align-items:center}
+.mb-row{display:flex;flex-direction:row;align-items:flex-start}
+.corner-cell{position:sticky;left:0;z-index:30;min-width:90px;max-width:90px;background:var(--surface);flex-shrink:0}
+.col-hdr-cell{position:sticky;top:0;z-index:20;min-width:130px;max-width:130px;background:var(--surface);flex-shrink:0;text-align:center;padding:0.6rem 0.4rem;font-size:0.82rem;color:var(--text)}
+.row-hdr-cell{position:sticky;left:0;z-index:10;min-width:90px;max-width:90px;background:var(--surface);flex-shrink:0;text-align:left;padding:0.4rem 0.5rem;font-size:0.78rem;color:var(--dimmed)}
+.data-cell{min-width:130px;max-width:130px;flex-shrink:0;vertical-align:top;padding:0.2rem 0.15rem}
 .matrix th,.matrix td{border-radius:6px;vertical-align:top}
 .matrix th{background:var(--surface);color:var(--text-dim);font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;padding:0.5rem 0.6rem;text-align:center;white-space:nowrap;position:sticky}
 .matrix th.row-header,.matrix td.row-header{position:sticky;left:0;z-index:2;background:var(--surface);text-align:left;min-width:90px}
@@ -219,16 +230,16 @@ select{cursor:pointer}
 
   <div class="matrix-wrap" v-if="rows.length">
     <table class="matrix">
-      <thead>
-        <tr>
-          <th class="corner row-header"></th>
-          <th class="col-header" v-for="c in cols" :key="c">{{ c }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="r in rows" :key="r">
-          <td class="row-header">{{ r }}</td>
-          <td v-for="c in cols" :key="c">
+      <div class="matrix-hdr-inner">
+        <div class="mh-row">
+          <div class="corner-cell"></div>
+          <div class="col-hdr-cell" v-for="c in cols" :key="c">{{ c }}</div>
+        </div>
+      </div>
+      <div class="matrix-body-inner">
+        <div class="mb-row" v-for="r in rows" :key="r">
+          <div class="row-hdr-cell">{{ r }}</div>
+          <div class="data-cell" v-for="c in cols" :key="c">
             <div class="cell-items">
               <div
                 v-for="it in cell(r,c)"
@@ -242,10 +253,10 @@ select{cursor:pointer}
               </div>
               <div v-if="!cell(r,c).length" class="cell-empty">—</div>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+
   </div>
 
   <div class="empty-state" v-else>
@@ -733,9 +744,11 @@ createApp({
         if (!e._cat) continue;
         const cat = e._cat;
         if (!r[cat]) r[cat] = {};
-        if (!r[cat][e.entity]) r[cat][e.entity] = [];
-        if (!r[cat][e.entity].find(x => x.id === e.id)) {
-          r[cat][e.entity].push(e);
+        const key = (e.entityId !== undefined) ? e.entityId : e.entity;
+        if (!key) continue;
+        if (!r[cat][key]) r[cat][key] = [];
+        if (!r[cat][key].find(x => x.id === e.id)) {
+          r[cat][key].push(e);
         }
       }
       return r;
@@ -747,7 +760,9 @@ createApp({
       const src = allD.value[cat] || {};
       let list = [];
       for (const entity in src) {
-        for (const it of src[entity]) list.push({ ...it, entity });
+        for (const it of src[entity]) {
+          list.push({ ...it, entity: (it.entityId !== undefined) ? it.entityId : entity });
+        }
       }
       return list.filter(it => {
         if (typ.value !== 'all' && it.typ !== typ.value) return false;
@@ -763,9 +778,8 @@ createApp({
     });
 
     const cols = computed(() => {
-      const seen = {};
-      for (const it of items.value) seen[it.entity] = true;
-      return Object.keys(seen).sort();
+      const src = allD.value[curTab.value] || {};
+      return Object.keys(src).sort();
     });
 
     const rows = computed(() => {
@@ -786,7 +800,7 @@ createApp({
     });
 
     function cell(month, entity) {
-      return items.value.filter(it => it.dt && it.dt.startsWith(month) && it.entity === entity);
+      return items.value.filter(it => it.dt && it.dt.startsWith(month) && ((it.entityId !== undefined) ? it.entityId === entity : it.entity === entity));
     }
 
     const grps = computed(() => {
@@ -796,7 +810,9 @@ createApp({
         if (!e._cat) continue;
         const cat = e._cat;
         if (!r[cat]) r[cat] = {};
-        r[cat][e.entity] = (r[cat][e.entity] || 0) + 1;
+        const key = (e.entityId !== undefined) ? e.entityId : e.entity;
+        if (!key) continue;
+        r[cat][key] = (r[cat][key] || 0) + 1;
       }
       return r;
     });
