@@ -1,564 +1,541 @@
 {
+  "entities": [
+    {
+      "id": "比亚迪",
+      "name": "比亚迪",
+      "cat": "companies"
+    },
+    {
+      "id": "小鹏",
+      "name": "小鹏",
+      "cat": "companies"
+    },
+    {
+      "id": "理想汽车",
+      "name": "理想汽车",
+      "cat": "companies"
+    },
+    {
+      "id": "华为",
+      "name": "华为",
+      "cat": "companies"
+    },
+    {
+      "id": "ROHM",
+      "name": "ROHM",
+      "cat": "companies"
+    },
+    {
+      "id": "onsemi",
+      "name": "onsemi",
+      "cat": "companies"
+    },
+    {
+      "id": "Dana Inc",
+      "name": "Dana Inc",
+      "cat": "companies"
+    },
+    {
+      "id": "斯图加特大学/埃斯林根应用技术大学",
+      "name": "斯图加特大学/埃斯林根应用技术大学",
+      "cat": "universities"
+    }
+  ],
   "entries": [
     {
       "id": "byd_wp01",
       "tit": "2025年新能源汽车800-1000V高压平台及供应链全景研究报告",
       "typ": "whitepaper",
       "dt": "2025-07",
-      "entity": "比亚迪",
       "aut": "盖世汽车研究院/东吴证券研究所",
       "summ": "报告系统梳理全球车企800V高压架构部署方案，重点分析比亚迪800V平台技术迭代路线、在售车型参数与销量分布、供应链竞争格局。e-platform 3.0/3.0 Evo以SiC功率器件为核心，800V车型渗透率持续提升。",
       "url": "https://www.pday.com.cn/Htmls/Report/202507/24552745.html",
       "kw": "800V,SiC,高压平台,e-platform,供应链",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_wp02",
       "tit": "碳化硅高速增长的前夕：功率渗透率提升与AI+AR双轮驱动",
       "typ": "whitepaper",
       "dt": "2025-11",
-      "entity": "比亚迪",
       "aut": "东方财富(东吴证券)研究所",
       "summ": "报告指出SiC是800V高压平台核心器件，比亚迪已开发1500V SiC功率芯片。800V+超级快充可实现充电10分钟续航300公里以上。2024年Q4 SiC逆变器全球EV渗透率约16%，国内800V车型中渗透率达72%。",
       "url": "https://data.eastmoney.com/report/zw_kanwu.jshtml?artid=AP202511251788142112&from=where",
       "kw": "SiC,800V,快充,碳化硅渗透率",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_wp03",
       "tit": "系统代工平台助力高端车规芯片国产化",
       "typ": "whitepaper",
       "dt": "2025-08",
-      "entity": "比亚迪",
       "aut": "上海证券研究所",
       "summ": "比亚迪半导体已实现车规级SiC晶圆自主产能（24万片/年），支撑800V平台电驱动系统国产替代。",
       "url": "https://data.eastmoney.com/report/zw_kanwu.jshtml?artid=AP202508181729782980&from=where",
       "kw": "SiC,车规芯片,国产替代",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_wp04",
       "tit": "富特科技车载电源头部企业，HVDC技术同源潜力十足",
       "typ": "whitepaper",
       "dt": "2026-02",
-      "entity": "比亚迪",
       "aut": "东吴证券研究所",
       "summ": "800V平台推动车载电源（OBC/DCDC/PDU）向高效率、高功率密度演进，比亚迪800V架构采用多合一集成路线，三合一/多合一集成产品成为主流。",
       "url": "https://data.eastmoney.com/report/zw_kanwu.jshtml?artid=AP202602041819736583&from=where",
       "kw": "OBC,DCDC,PDU,800V,多合一",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_pt01",
       "tit": "US12212253B2 — Controller and Drive Circuits for Electric Motors",
       "typ": "patent",
       "dt": "2024-09",
-      "entity": "比亚迪",
       "aut": "BYD Company Limited",
       "summ": "比亚迪电机驱动控制器及驱动电路专利，涵盖SiC功率模块布局与热管理方案，已获美国专利局授权（2024-12）。是比亚迪电驱动控制器核心技术专利之一。",
       "url": "https://patents.google.com/patent/US12212253B2/en",
       "kw": "电机控制,SiC,驱动电路",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_pt02",
       "tit": "US12191788B2 — Controller and Drive Circuits for Electric Motors",
       "typ": "patent",
       "dt": "2024-09",
-      "entity": "比亚迪",
       "aut": "BYD Company Limited",
       "summ": "电机驱动控制器专利家族成员，涵盖电驱动系统控制器架构与功率驱动集成方案（2024-12）。",
       "url": "https://patents.google.com/patent/US12191788B2/en",
       "kw": "电机控制,集成驱动",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_pt03",
       "tit": "MX2025011519A — Electric Drive Module with Liquid-Cooled Snubber",
       "typ": "patent",
       "dt": "2025-01",
-      "entity": "比亚迪",
       "aut": "BYD Company Limited",
       "summ": "电驱动模块专利，内置液冷Snubber的SiC逆变器集成方案，减小体积并提升散热性能，专为800V及以上高压电驱动平台设计。",
       "url": "https://patents.google.com/patent/MX2025011519A/en",
       "kw": "SiC逆变器,液冷,800V",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_pt04",
       "tit": "US20220314824A1 — Integrated Controller and Control System for EV",
       "typ": "patent",
       "dt": "2022-10",
-      "entity": "比亚迪",
       "aut": "BYD Company Limited",
       "summ": "电动汽车集成控制器专利，实现多合一电驱动控制功能高度集成，是比亚迪e-platform 3.0八合一powertrain的技术基础专利。",
       "url": "https://patents.google.com/patent/US20220314824A1/en",
       "kw": "八合一,集成控制器,e-platform",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_paper01",
       "tit": "BYD Gets About Twenty Patents a Day, Adding up to 50000 Technologies",
       "typ": "paper",
       "dt": "2025-11",
-      "entity": "比亚迪",
       "aut": "CleanTechnica",
       "summ": "比亚迪日均申请约20件专利，累计授权超50000件。e-platform 3.0采用模块化架构，8-in-1电驱动系统（电机+减速器+逆变器+DC-DC+OBC+PDU+VCU+BMS）是拓扑复用理念的典型实践。",
       "url": "https://cleantechnica.com/2025/11/20/byd-gets-about-twenty-patents-a-day-adding-up-to-50000-technologies-already-authorized/",
       "kw": "专利战略,e-platform,8-in-1",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_paper02",
       "tit": "Analysis of Technological Innovation and Competitive Advantage in NEV",
       "typ": "paper",
       "dt": "2025-09",
-      "entity": "比亚迪",
       "aut": "ISCTE-IUL / SHS Conferences",
       "summ": "学术会议论文，通过专利计量分析研究比亚迪、特斯拉、丰田在新能源汽车电驱动领域的技术创新路径，涵盖电机拓扑复用、电池系统集成、热管理架构。",
       "url": "https://www.shs-conferences.org/articles/shsconf/pdf/2025/09/shsconf_icdde2025_01031.pdf",
       "kw": "专利分析,技术创新",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_paper03",
       "tit": "Bidirectional DC-DC Converter Topologies for Hybrid Energy Storage",
       "typ": "paper",
       "dt": "2025-05",
-      "entity": "比亚迪",
       "aut": "MDPI / Energies Journal",
       "summ": "MDPI学术论文，研究双向DC-DC变换器拓扑在复合储能系统中的应用，与比亚迪800V平台多能流管理（OBC+DC-DC+PDU集成）拓扑设计有技术关联。",
       "url": "https://www.mdpi.com/1996-1073/18/9/2312",
       "kw": "DC-DC,双向变换器,储能",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "byd_paper04",
       "tit": "Patent Analysis in Eco-Friendly Vehicle Technology Transfer",
       "typ": "paper",
       "dt": "2024-08",
-      "entity": "比亚迪",
       "aut": "ScienceDirect / Energy Policy Journal",
       "summ": "基于专利数据的研究，丰田、比亚迪、特斯拉在环保汽车技术转移中领先。比亚迪电驱动轻量化（减重50-60%）与CO2减排（降低37%）效果显著，SiC器件应用是关键路径。",
       "url": "https://www.sciencedirect.com/science/article/abs/pii/S0196890424009373",
       "kw": "轻量化,碳中和,SiC",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "比亚迪"
     },
     {
       "id": "xp_wp01",
       "tit": "小鹏超级增程系统技术解析：串并联混动架构转型",
       "typ": "whitepaper",
       "dt": "2025-09",
-      "entity": "小鹏",
       "aut": "技术分析综合报告",
       "summ": "小鹏汽车从纯电转向插电混动/增程，首款增程版车型为小鹏X9超级增程版，搭载63.3kWh大电池（纯电续航约450km），采用1.5T增程器+电机串并联架构，可在串联（增程）、并联（发动机直驱）、纯电三种模式间智能切换，实现高快速路发动机直驱+市区串联增程的高效组合，综合油耗显著低于纯串联增程式。",
       "url": "https://www.xiaopeng.com/news/company_news/5510.html",
       "kw": "超级增程,串并联,PHEV,增程器,X9",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "小鹏"
     },
     {
       "id": "xp_wp02",
       "tit": "插混 vs 增程技术门槛分析：为什么小鹏选择串并联路线",
       "typ": "whitepaper",
       "dt": "2025-04",
-      "entity": "小鹏",
       "aut": "行业技术分析",
       "summ": "分析指出：增程式仅能在市区工况高效，在高快速路工况能量经过两次转化损耗高达20%；串并联插混可在高速切换发动机直驱模式，能量损耗仅3-5%，综合效率更高。小鹏选择插混路线而非简单增程，体现了对动力系统高效化的追求。串并联架构对动力系统集成控制要求更高，是更复杂但更高效的技术路线。",
       "url": "https://finance.sina.com.cn/wm/2025-04-03/doc-inerwfmw8456712.shtml",
       "kw": "插混,增程,并联直驱,能量管理",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "小鹏"
     },
     {
       "id": "xp_pt01",
       "tit": "CN216002170U — 增程式电动车用混合动力传动系统",
       "typ": "patent",
       "dt": "2025-01",
-      "entity": "小鹏",
       "aut": "小鹏汽车技术团队",
       "summ": "增程式电动车用混合动力传动系统专利，涵盖发动机、发电机、驱动电机与多挡减速器的动力耦合方案，实现串联发电与并联直驱两种模式，支持增程优先+高速切换直驱的复合能量管理策略，是小鹏超级增程系统的核心传动专利。",
       "url": "https://patents.google.com/patent/CN216002170U/zh",
       "kw": "混合动力传动,串并联,增程,多挡减速器",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "小鹏"
     },
     {
       "id": "xp_pt02",
       "tit": "CN112550023B — 电动汽车电气集成装置、方法及控制系统",
       "typ": "patent",
       "dt": "2023-01",
-      "entity": "小鹏",
       "aut": "小鹏汽车技术团队",
       "summ": "电动汽车电气集成装置专利，实现多合一动力域控制器（VCU+BDU+OBC集成），支持整车动力分配的数字化控制策略，为后续插电混动车型的动力域集成控制打下基础。",
       "url": "https://patents.google.com/patent/CN112550023B/zh",
       "kw": "电气集成,多合一控制,动力域",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "小鹏"
     },
     {
       "id": "xp_paper01",
       "tit": "Optimizing Hybrid Electric Vehicle Performance: A Detailed Overview of Energy Management Strategies",
       "typ": "paper",
       "dt": "2025-01",
-      "entity": "小鹏",
       "aut": "MDPI / Energies Journal",
       "summ": "MDPI学术论文，系统综述插电混动/增程式车辆能量管理策略，涵盖串并联混动架构的在线优化（RL/DDPG）、等效油耗最低（ECMS）和瞬时优化（DP/PMP）四大类方法。对理解小鹏超级增程系统在串联优先+并联直驱模式间切换的控制逻辑有直接参考价值。",
       "url": "https://www.mdpi.com/1996-1073/18/1/10",
       "kw": "能量管理,串并联,ECMS,动态规划,PHEV",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "小鹏"
     },
     {
       "id": "xp_paper02",
       "tit": "Artificial Intelligence Algorithms for Hybrid Electric Powertrain System Control: A Review",
       "typ": "paper",
       "dt": "2025-08",
-      "entity": "小鹏",
       "aut": "MDPI / Energies Journal",
       "summ": "MDPI学术论文，综述AI算法（深度强化学习、模仿学习、神经网络）在混动动力系统控制中的应用，包括电池SOC管理、发动机启停优化、模式切换平顺性控制等，对小鹏增程系统的智能能量管理有借鉴意义。",
       "url": "https://www.mdpi.com/1996-1073/18/8/2018",
       "kw": "AI控制,深度强化学习,混动,电池管理",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "小鹏"
     },
     {
       "id": "xp_paper03",
       "tit": "Compact Hybrid Powertrain Development for a Formula SAE Car",
       "typ": "paper",
       "dt": "2025-05",
-      "entity": "小鹏",
       "aut": "MDPI / Proceedings",
       "summ": "针对紧凑型混动动力系统的开发实践论文，研究电机-发动机耦合布置、扭振抑制和多挡位集成设计，适合作为理解小鹏串并联混动系统机械集成的技术参考。",
       "url": "https://www.mdpi.com/2673-4591/131/1/14",
       "kw": "混动集成,扭振,多挡,电机耦合",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "小鹏"
     },
     {
       "id": "xp_paper04",
       "tit": "Adaptive-Efficient DP Algorithm for Hybrid Electric Vehicle Powertrain",
       "typ": "paper",
       "dt": "2025-11",
-      "entity": "小鹏",
       "aut": "MDPI / Mathematics",
       "summ": "混动动力系统自适应动态规划（ADP）算法研究，提出实时可行的近似最优能量管理策略，可将综合燃油消耗降低8-12%，对插电混动车辆在增程/直驱模式间的切换优化有直接工程参考价值。",
       "url": "https://www.mdpi.com/2227-7390/13/21/3503",
       "kw": "动态规划,能量优化,自适应控制,PHEV",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "小鹏"
     },
     {
       "id": "li_auto_wp01",
       "tit": "理想汽车与中车时代半导体签署战略授权协议，合作开发全新一代增程专用功率模块",
       "typ": "whitepaper",
       "dt": "2025-06",
-      "entity": "理想汽车",
       "aut": "车pe360 / 理想汽车官方",
       "summ": "理想汽车与中车时代半导体合作开发XPM二合一功率模块，可适配800V高压平台至400V常规平台，专为增程混合动力系统优化，预计2026年量产，预计占增程式电驱动功率模块市场份额超40%。",
       "url": "https://www.cmpe360.com/p/275480",
       "kw": "理想,中车时代,功率模块,XPM,增程,混动",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "理想汽车"
     },
     {
       "id": "li_auto_wp02",
       "tit": "理想i8高压SiC电驱动系统斩获[中国心]2025年度十佳新能源动力系统",
       "typ": "whitepaper",
       "dt": "2025-11",
-      "entity": "理想汽车",
       "aut": "IT之家 / 芯智讯",
       "summ": "理想i8搭载自研高压SiC电驱动系统入选[中国心]年度十佳，系统采用理想自研SiC功率模块，在能效、集成度及全栈自研技术方面实现突破，综合功率达400kW（前后155kW+245kW），支持5C超充。",
       "url": "https://www.ithome.com/0/916/529.htm",
       "kw": "理想i8,SiC,电驱动,[中国心],十佳,800V",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "理想汽车"
     },
     {
       "id": "li_auto_paper01",
       "tit": "理想汽车自研高压碳化硅功率模块LPM技术解析",
       "typ": "whitepaper",
       "dt": "2025-07",
-      "entity": "理想汽车",
       "aut": "电子工程专辑 / 行家说三代半",
       "summ": "理想历时3年半完成自研SiC模块从设计到量产：采用无外露功率端子+内部开窗设计，Y方向尺寸减少40mm；系统隐性摩擦力降至约10nH（降低50%）；相对IGBT续航增加6%（约40km），关键技术组合再提升1%（约7km）。",
       "url": "https://www.eet-china.com/mp/a414193.html",
       "kw": "SiC,LPM,无端子,AMB,续航增加,800V",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "理想汽车"
     },
     {
       "id": "li_auto_news01",
       "tit": "理想汽车自研SiC功率模块开始量产——苏州+常州双基地",
       "typ": "whitepaper",
       "dt": "2025-02",
-      "entity": "理想汽车",
       "aut": "CnEVpost 电车汇",
       "summ": "理想自研SiC功率芯片及下一代电驱动总成在苏州半导体基地（SiC芯片）和常州电驱动基地（总成）同步量产，将搭载于2025年推出的多款BEV车型。核心三大技术：自研SiC功率芯片+新一代电驱动总成+800V高压平台。",
       "url": "https://cnevpost.com/2025/02/13/li-auto-production-sic-modules/",
       "kw": "SiC,量产,苏州,常州,BEV,800V",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "理想汽车"
     },
     {
       "id": "li_auto_paper02",
       "tit": "SiC MOSFETs: The Inevitable Trend for 800V Electric Vehicle",
       "typ": "paper",
       "dt": "2025-03",
-      "entity": "理想汽车",
       "aut": "IEEE Xplore",
       "summ": "IEEE论文研究SiC MOSFET在800V电动车中的应用趋势，以理想i8为案例：采用SiC功率模块相对IGBT续航提升6%（约40km），配合系统优化再提升1%（约7km）。研究指出SiC MOSFET是800V电动车的必然趋势。",
       "url": "https://ieeexplore.ieee.org/iel8/25/10887097/10690262.pdf",
       "kw": "SiC MOSFET,800V,续航提升,理想i8,电驱动",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "理想汽车"
     },
     {
       "id": "huawei_sicmos_paper01",
       "tit": "PCIM2025论文：太阳能系统的高效率碳化硅MOSFET解决方案",
       "typ": "paper",
       "dt": "2025",
-      "entity": "华为",
       "aut": "PCIM/EET-China",
       "summ": "介绍光伏系统主流架构及SiC MOSFET解决方案，对比IGBT方案在效率上的优势。",
       "url": "https://www.eet-china.com/mp/a438958.html",
       "kw": "SiC MOSFET,光伏逆变器,PCIM2025,效率优化",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "huawei_sicmos_paper02",
       "tit": "Three Phase Bidirectional AC-DC Converter with Bipolar Voltage Fed SiC MOSFET",
       "typ": "paper",
       "dt": "2024",
-      "entity": "华为",
       "aut": "IEEE/Patent",
       "summ": "基于SiC MOSFET的三相双向AC-DC转换器研究，适用于新能源汽车OBC和充电桩。",
       "url": "https://patents.google.com/patent/US12095381",
       "kw": "SiC MOSFET,三相AC-DC,双向变换器,新能源汽车",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "huawei_sicmos_patent01",
       "tit": "CN119341362A - 功率变换设备及SiC功率模块",
       "typ": "patent",
       "dt": "2024-09",
-      "entity": "华为",
       "aut": "华为数字能源技术有限公司",
       "summ": "华为数字能源的SiC功率变换设备及功率模块专利，2024年9月申请，2025年1月公开。",
       "url": "https://patents.google.com/patent/CN119341362A/zh",
       "kw": "SiC,功率变换,功率模块,华为数字能源",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "huawei_sicmos_patent02",
       "tit": "CN113541455A - 一种SiC MOSFET模块连续可调多等级驱动电路",
       "typ": "patent",
       "dt": "2021",
-      "entity": "华为",
       "aut": "华为技术有限公司",
       "summ": "SiC MOSFET模块的多等级驱动电路专利，支持连续可调驱动策略。",
       "url": "https://patents.google.com/patent/CN113541455A/zh",
       "kw": "SiC MOSFET,驱动电路,可调,多等级",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "huawei_sicmos_patent03",
       "tit": "EP4362320B1 - Motor Control Unit and Power System with SiC/GaN",
       "typ": "patent",
       "dt": "2024-05",
-      "entity": "华为",
       "aut": "Huawei Technologies",
       "summ": "电机控制单元及功率系统专利，同时采用SiC MOSFET和GaN晶体管。",
       "url": "https://patents.google.com/patent/EP4362320B1/zh",
       "kw": "SiC MOSFET,GaN,电机控制,功率系统",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "huawei_sicmos_wp01",
       "tit": "碳化硅高速增长的前夕：功率渗透率提升与AI+AR双轮驱动",
       "typ": "whitepaper",
       "dt": "2025-11",
-      "entity": "华为",
       "aut": "东吴证券/行家说三代半",
       "summ": "深度分析SiC在新能源车、AI芯片散热、AR眼镜、射频器件四大领域的应用前景及渗透率预测。",
       "url": "https://pdf.dfcfw.com/pdf/H3_AP202511251788142112_1.pdf",
       "kw": "SiC,碳化硅,新能源汽车,AI,AR,800V高压平台",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "huawei_sicmos_wp02",
       "tit": "华为2025年年度报告",
       "typ": "whitepaper",
       "dt": "2025",
-      "entity": "华为",
       "aut": "华为投资控股有限公司",
       "summ": "华为年度经营报告，涵盖数字能源、智能汽车解决方案等业务板块，提及功率半导体和SiC相关布局。",
       "url": "https://www-file.huawei.com/minisite/annual-report-download/annual_report_2024_cn.pdf",
       "kw": "华为,年度报告,数字能源,智能汽车,功率半导体",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "huawei_sicmos_wp03",
       "tit": "智能充电网络十大趋势白皮书2024",
       "typ": "whitepaper",
       "dt": "2024",
-      "entity": "华为",
       "aut": "华为数字能源",
       "summ": "华为发布的充电网络产业白皮书，强调SiC/GaN第三代半导体是推动超充发展的核心器件。",
       "url": "https://digitalpower.huawei.com/attachments/index/81b0f79b9641433a9bcedf16c6f75001.pdf",
       "kw": "充电网络,SiC,GaN,超充,800V,华为数字能源",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "huawei_sicmos_wp04",
       "tit": "智能光伏十大趋势白皮书",
       "typ": "whitepaper",
       "dt": "2024",
-      "entity": "华为",
       "aut": "华为",
       "summ": "分析SiC和GaN宽禁带半导体在光伏逆变器中的应用，大幅降低功率半导体开关损耗。",
       "url": "https://solar.huawei.com/admin/asset/v1/pro/view/dc0a29fb424344e28dcb467d8f7c1073.pdf",
       "kw": "SiC,GaN,光伏逆变器,智能光伏,开关损耗",
       "_cat": "companies",
-      "cites": ""
-    },
-    {
-      "id": "arxiv_sic_inv_paper01",
-      "tit": "Active Short Circuit and Safe Discharge Mechanisms in Multi-Phase Inverters During Critical Failures",
-      "typ": "paper",
-      "dt": "2025-11",
-      "entity": "SiC多相逆变器研究",
-      "aut": "arXiv / Siddhesh Pimpale, Sagar Mahadik",
-      "summ": "多相逆变器（EV动力总成）主动短路检测+安全放电机制，防止故障扩散到整流其他相。核心：on-chip主动短路机制实现故障相隔离+受控放电降低热应力；实验证明故障检测响应优于现有方法。针对SiC功率模块在EV应用中的安全性设计。",
-      "url": "https://arxiv.org/abs/2511.08405",
-      "kw": "SiC,多相逆变器,主动短路,安全放电,EV,故障保护",
-      "_cat": "companies",
-      "cites": ""
-    },
-    {
-      "id": "arxiv_gan_inv_paper01",
-      "tit": "Power Loss Modelling of GaN HEMT based 3L ANPC Three Phase Inverter for different PWM Techniques",
-      "typ": "paper",
-      "dt": "2022-12",
-      "entity": "GaN逆变器损耗建模研究",
-      "aut": "arXiv / M. Cacciato, G. Aiello et al. (IEEE EPE 2022, GaN4AP项目)",
-      "summ": "GaN HEMT三电平ANPC逆变器（3L ANPC）的解析损耗建模；对比不同载波PWM策略下的导通损耗+开关损耗分布。基于IEEE EPE 2022会议论文，ECSEL-JU GaN4AP项目支持。",
-      "url": "https://arxiv.org/abs/2212.05246",
-      "kw": "GaN HEMT,三电平ANPC,损耗建模,PWM策略,开关损耗,导通损耗",
-      "_cat": "companies",
-      "cites": ""
-    },
-    {
-      "id": "igbt_loss_paper01",
-      "tit": "大功率密度IGBT模块损耗计算与系统分析",
-      "typ": "paper",
-      "dt": "2026-03",
-      "entity": "Electronics",
-      "aut": "MDPI",
-      "summ": "IGBT模块损耗计算与系统分析，适用于电机控制器硬件热设计验证。覆盖开关损耗、导通损耗建模方法。",
-      "url": "https://www.mdpi.com/1996-1073/18/4/997",
-      "kw": "IGBT,损耗计算,热设计,电机控制器,功率模块",
-      "_cat": "companies",
-      "cites": ""
-    },
-    {
-      "id": "sic_nn_paper01",
-      "tit": "基于神经网络的SiC MOSFET器件性能预测",
-      "typ": "paper",
-      "dt": "2026-01",
-      "entity": "SiC-Research",
-      "aut": "MDPI",
-      "summ": "AI+功率半导体：用神经网络预测SiC器件行为，为器件模型和可靠性评估提供新方法。",
-      "url": "https://www.mdpi.com/2072-666X/16/1/55",
-      "kw": "SiC MOSFET,神经网络,器件预测,可靠性,建模",
-      "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "华为"
     },
     {
       "id": "rohm_sic_wp01",
       "tit": "ROHM SiC MOSFET可靠性难题攻克",
       "typ": "whitepaper",
       "dt": "2026-03",
-      "entity": "ROHM",
       "aut": "ROHM",
       "summ": "栅氧层失效机制+新封装技术，系统梳理高温/高频/高功率密度场景下的工程约束。",
       "url": "https://rohm.eefocus.com/article/id-4663",
       "kw": "SiC MOSFET,可靠性,栅氧层,失效机制,封装技术",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "ROHM"
     },
     {
       "id": "onsemi_sic_wp01",
       "tit": "onsemi EliteSiC M3e：传导损耗-30%，逆变器功率+20%",
       "typ": "whitepaper",
       "dt": "2025-02",
-      "entity": "onsemi",
       "aut": "onsemi",
       "summ": "onsemi推出新一代1200V SiC MOSFET平台EliteSiC M3e，传导损耗降低30%，逆变器功率提升20%。",
       "url": "https://finance.sina.com.cn/tech/roll/2025-02-20/doc-inemcark4774625.shtml",
       "kw": "SiC MOSFET,EliteSiC M3e,onsemi,逆变器,功率密度",
       "_cat": "companies",
-      "cites": ""
-    },
-    {
-      "id": "gtc_huawei_wp01",
-      "tit": "广汽丰田铂智7全系搭载华为DriveONE",
-      "typ": "whitepaper",
-      "dt": "2026-04",
-      "entity": "Huawei",
-      "aut": "163.com",
-      "summ": "丰田首次大规模采用中国厂商电驱方案，华为正式进入日系供应链。广汽丰田铂智7全系搭载华为DriveONE。",
-      "url": "https://www.163.com/dy/article/J7MOC90O05568D7G.html",
-      "kw": "华为DriveONE,广汽丰田,电驱动,供应链,日系",
-      "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "onsemi"
     },
     {
       "id": "dana_asc_sdf_paper01",
       "tit": "Active Short Circuit and Safe Discharge Mechanisms in Multi-Phase Inverters During Critical Failures",
       "typ": "paper",
       "dt": "2025-11",
-      "entity": "Dana Inc",
       "aut": "Siddhesh Pimpale, Sagar Mahadik (Dana Inc, USA)",
       "summ": "多相逆变器主动短路(ASC)与安全放电(SDF)故障保护机制研究。提出集中式短路检测(5.8μs响应)+主动短路相隔离+混合放电方案，实验证明系统性能提升2.45×，故障检测时间减少2.11×，热应力降低2.25×。直接适用于EV电机控制器硬件保护电路设计参考。",
       "url": "https://arxiv.org/abs/2511.08405",
       "kw": "SiC,多相逆变器,主动短路,安全放电,故障保护,EV,电机控制器",
       "_cat": "companies",
-      "cites": ""
+      "cites": "",
+      "entityId": "Dana Inc"
     },
     {
       "id": "univ_stuttgart_bev_paper01",
       "tit": "A Data-Based Review of Battery Electric Vehicle and Traction Inverter Trends",
       "typ": "paper",
       "dt": "2025-08",
-      "entity": "斯图加特大学/埃斯林根应用技术大学",
       "aut": "Christoph Sachs (Univ. Stuttgart), Martin Neuburger (Esslingen Univ.)",
       "summ": "基于1000+欧洲BEV车型数据集(2010-2025)的数据驱动综述。核心发现：①WLTP续航从135km升至455km，但能耗基本持平②SiC渗透率自2021年加速(~50%新车型)③3L-TNPC SiC方案仅需+30%芯片面积，可节省€234电池成本(500km车型)④GaN接近800V automotive牵引应用。IECON 2025论文。",
       "url": "https://arxiv.org/abs/2508.14224",
       "kw": "BEV,牵引逆变器,SiC,3L-TNPC,数据驱动,WLTP,功率密度,成本分析",
-      "_cat": "companies",
-      "cites": ""
+      "_cat": "universities",
+      "cites": "",
+      "entityId": "斯图加特大学/埃斯林根应用技术大学"
     }
   ],
-  "updated": "2026-04-15T12:10:00+08:00"
+  "updated": "2026-04-15T12:24:00+08:00"
 }
